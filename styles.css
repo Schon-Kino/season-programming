@@ -78,7 +78,6 @@ body {
 }
 
 h1 {
-    font-size: 7.5vw;
     line-height: 0.9;
     font-weight: 700;
     text-transform: lowercase;
@@ -93,7 +92,7 @@ h1 {
 /* Movie text styling in the grid - removed frame */
 .movie-text {
     position: absolute;
-    font-size: 1.4vw;
+    /* Remove font-size: 1.4vw; - it will be set via JavaScript */
     line-height: 1.2;
     font-weight: 500;
     z-index: 15;
@@ -104,7 +103,6 @@ h1 {
     color: #000;
     overflow: hidden;
     box-sizing: border-box;
-    /* Important: NO border here */
     border: none;
 }
 
@@ -113,7 +111,7 @@ h1 {
 }
 
 .movie-date-small {
-    font-size: 1.1vw;
+    /* Remove font-size: 1.1vw; - it will be set via JavaScript */
     color: #ffffff;
     display: block;
     margin-top: 3px;
@@ -233,7 +231,15 @@ p {
 
 @media (max-width: 768px) {
     h1 {
-        font-size: 16vw; /* Increased from 11vw */
+        line-height: 0.9;
+        font-weight: 700;
+        text-transform: lowercase;
+        color: #ff3030;
+        margin: 0;
+        padding: 0;
+        letter-spacing: -0.02em;
+        transform-origin: left;
+        transform: scaleY(1.05);
     }
     
     h2 {
@@ -248,12 +254,12 @@ p {
         font-size: 1rem;
     }
     
-    .movie-text {
-        font-size: 2.8vw;
+    .movie-text, .movie-text strong {
+        /* Keep other styles but remove the font-size declaration */
     }
     
     .movie-date-small {
-        font-size: 2vw;
+        /* Keep other styles but remove the font-size declaration */
     }
 
     .container {
@@ -265,7 +271,15 @@ p {
 
 @media (max-width: 480px) {
     h1 {
-        font-size: 16vw; /* Increased size for even smaller screens */
+        line-height: 0.9;
+        font-weight: 700;
+        text-transform: lowercase;
+        color: #ff3030;
+        margin: 0;
+        padding: 0;
+        letter-spacing: -0.02em;
+        transform-origin: left;
+        transform: scaleY(1.05);
     }
     
     .main-content {
@@ -284,12 +298,12 @@ p {
         font-size: 1.2rem;
     }
     
-    .movie-text {
-        font-size: 3.5vw;
+    .movie-text, .movie-text strong {
+        /* Keep other styles but remove the font-size declaration */
     }
     
     .movie-date-small {
-        font-size: 2.8vw;
+        /* Keep other styles but remove the font-size declaration */
     }
     
     .welcome {

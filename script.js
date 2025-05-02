@@ -172,4 +172,36 @@ document.addEventListener('DOMContentLoaded', function() {
         
         movieTextsContainer.appendChild(movieText);
     });
+
+    // Add this function to the end of your DOMContentLoaded event handler
+    function adjustTextSizes() {
+        const container = document.querySelector('.container');
+        const containerWidth = container.offsetWidth;
+        
+        // Increase these multipliers to make text bigger
+        const movieTextSize = containerWidth * 0.032;  // Increase this value to make text larger
+        const dateTextSize = containerWidth * 0.020;   // Increase this value to make text larger
+        const titleSize = containerWidth * 0.16;       // For the schön.kino title
+        
+        // Apply to all movie texts
+        const movieTexts = document.querySelectorAll('.movie-text strong');
+        const dateTexts = document.querySelectorAll('.movie-date-small');
+        const titleTexts = document.querySelectorAll('.text-overlay h1');
+        
+        movieTexts.forEach(text => {
+            text.style.fontSize = `${movieTextSize}px`;
+        });
+        
+        dateTexts.forEach(text => {
+            text.style.fontSize = `${dateTextSize}px`;
+        });
+        
+        titleTexts.forEach(title => {
+            title.style.fontSize = `${titleSize}px`;
+        });
+    }
+
+    // Add these event listeners
+    window.addEventListener('load', adjustTextSizes);
+    window.addEventListener('resize', adjustTextSizes);
 });
