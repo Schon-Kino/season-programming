@@ -3,6 +3,8 @@ name: Deploy Latest Season to GitHub Pages
 on:
   push:
     branches: [main]
+    
+  workflow_dispatch:
 
 jobs:
   deploy:
