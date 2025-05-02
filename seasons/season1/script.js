@@ -179,8 +179,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const containerWidth = container.offsetWidth;
         
         // Increase these multipliers to make text bigger
-        const movieTextSize = containerWidth * 0.032;  // Increase this value to make text larger
-        const dateTextSize = containerWidth * 0.020;   // Increase this value to make text larger
+        const movieTextSize = containerWidth * 0.040;  // Increase this value to make text larger
+        const dateTextSize = containerWidth * 0.025;   // Increase this value to make text larger
         const titleSize = containerWidth * 0.16;       // For the schön.kino title
         
         // Apply to all movie texts
