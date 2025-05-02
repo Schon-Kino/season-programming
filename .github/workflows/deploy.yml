@@ -2,8 +2,7 @@ name: Deploy Latest Season to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   deploy:
@@ -16,14 +15,13 @@ jobs:
       - name: Find latest season folder
         id: find-latest
         run: |
-          # List season directories, extract numbers, sort, pick the highest
           latest=$(ls seasons | grep 'season' | sed 's/season//' | sort -n | tail -n 1)
-          echo "Latest season number is $latest"
+          echo "Latest season is season$latest"
           echo "season_dir=seasons/season$latest" >> $GITHUB_OUTPUT
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ${{ steps.find-latest.outputs.season_dir }}
-
+          publish_branch: gh-pages
+          publish_dir: ${{ github.workspace }}/${{ steps.find-latest.outputs.season_dir }}
