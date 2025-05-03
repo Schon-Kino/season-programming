@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
             height: 2
         },
         {
-            title: "Snacking",
+            title: "Snacks",
             director: "Various Directors",
             date: "14/5",
             year: "",
