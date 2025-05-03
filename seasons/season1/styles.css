@@ -78,6 +78,7 @@ body {
 }
 
 h1 {
+    font-size: 7.5vw;
     line-height: 0.9;
     font-weight: 700;
     text-transform: lowercase;
@@ -92,7 +93,7 @@ h1 {
 /* Movie text styling in the grid - removed frame */
 .movie-text {
     position: absolute;
-    /* Remove font-size: 1.4vw; - it will be set via JavaScript */
+    font-size: 1.4vw;
     line-height: 1.2;
     font-weight: 500;
     z-index: 15;
@@ -103,6 +104,7 @@ h1 {
     color: #000;
     overflow: hidden;
     box-sizing: border-box;
+    /* Important: NO border here */
     border: none;
 }
 
@@ -111,7 +113,7 @@ h1 {
 }
 
 .movie-date-small {
-    /* Remove font-size: 1.1vw; - it will be set via JavaScript */
+    font-size: 1.1vw;
     color: #ffffff;
     display: block;
     margin-top: 3px;
@@ -175,6 +177,14 @@ p {
     margin-bottom: 2rem;
 }
 
+.season-heading {
+    font-weight: 700; /* Bold */
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: white;    
+    text-decoration: underline;
+}
+
 .schedule-container {
     margin: 2rem 0;
 }
@@ -182,16 +192,6 @@ p {
 .schedule {
     padding-left: 1rem;
     border-left: 3px solid #ff3030;
-}
-
-.movie-date {
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.movie-date:last-child {
-    border-bottom: none;
 }
 
 .invitation {
@@ -212,6 +212,9 @@ p {
     font-size: 0.9em; /* Slightly smaller than the movie text */
     font-weight: 400; /* Not bold */
     opacity: 0.9;
+    margin-bottom: 0; /* Ensure no extra gap */
+    display: inline-block;
+    line-height: 1.3;
 }
 
 /* Add this for the program heading */
@@ -231,15 +234,7 @@ p {
 
 @media (max-width: 768px) {
     h1 {
-        line-height: 0.9;
-        font-weight: 700;
-        text-transform: lowercase;
-        color: #ff3030;
-        margin: 0;
-        padding: 0;
-        letter-spacing: -0.02em;
-        transform-origin: left;
-        transform: scaleY(1.05);
+        font-size: 16vw; /* Increased from 11vw */
     }
     
     h2 {
@@ -254,12 +249,12 @@ p {
         font-size: 1rem;
     }
     
-    .movie-text, .movie-text strong {
-        /* Keep other styles but remove the font-size declaration */
+    .movie-text {
+        font-size: 2.8vw;
     }
     
     .movie-date-small {
-        /* Keep other styles but remove the font-size declaration */
+        font-size: 2vw;
     }
 
     .container {
@@ -271,15 +266,7 @@ p {
 
 @media (max-width: 480px) {
     h1 {
-        line-height: 0.9;
-        font-weight: 700;
-        text-transform: lowercase;
-        color: #ff3030;
-        margin: 0;
-        padding: 0;
-        letter-spacing: -0.02em;
-        transform-origin: left;
-        transform: scaleY(1.05);
+        font-size: 16vw; /* Increased size for even smaller screens */
     }
     
     .main-content {
@@ -298,12 +285,12 @@ p {
         font-size: 1.2rem;
     }
     
-    .movie-text, .movie-text strong {
-        /* Keep other styles but remove the font-size declaration */
+    .movie-text {
+        font-size: 3.5vw;
     }
     
     .movie-date-small {
-        /* Keep other styles but remove the font-size declaration */
+        font-size: 2.8vw;
     }
     
     .welcome {
@@ -319,4 +306,49 @@ p {
         height: 140vw; /* More rectangular on smaller phones */
         margin: 0 auto;
     }
+}
+.schedule {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.schedule-item {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    align-items: start;
+    color: #fff;
+}
+
+.movie-date {
+    text-align: left;
+    padding-right: 1rem;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.6;
+}
+
+.movie-info {
+    padding-left: 1rem;
+    line-height: 1.6;
+    color: #fff;
+}
+
+.alert {
+    color: #007BFF; /* Bright blue */
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-top: 0.2rem;
+}
+
+.strikethrough {
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+.past .movie-date,  /*to make past events less opaque */
+.past .movie-info {
+    opacity: 0.5;  /* Adjust the opacity  */
+    transition: opacity 0.3s ease; /* Optional: smooth transition */
 }
