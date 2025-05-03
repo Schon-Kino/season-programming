@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function() {
             height: 2
         },
         {
-            title: "Short & Sweet",
+            title: "Snacking",
             director: "Various Directors",
             date: "14/5",
             year: "",
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
         {
             title: "Daisies",
             director: "Vera Chytilová",
-            date: "28/5",
+            date: "29/5",
             year: "1966",
             position: [10, 6],
             width: 4,
