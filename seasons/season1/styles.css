@@ -35,6 +35,20 @@ body {
     margin: 0 auto;
 }
 
+/* Poster styles */
+.poster-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.poster-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
 .grid-container {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
@@ -259,7 +273,7 @@ p {
 
     .container {
         width: 90vw; /* Use 90% of viewport width */
-        height: 120vw; /* Make it slightly rectangular (4:3 aspect ratio) */
+        height: auto; /* Let height be determined by poster aspect ratio */
         max-width: none;
     }
 }
@@ -303,7 +317,7 @@ p {
 
     .container {
         width: 95vw; /* Use almost full viewport width */
-        height: 140vw; /* More rectangular on smaller phones */
+        height: auto; /* Let height be determined by poster aspect ratio */
         margin: 0 auto;
     }
 }
