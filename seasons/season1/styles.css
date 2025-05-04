@@ -125,8 +125,19 @@ p {
 
 .schedule {
     padding-left: 1rem;
-    border-left: 3px solid #ff3030;
+    position: relative;
     margin: 2rem 0;
+}
+
+/* Have red line stop exactly on the last movie */
+.schedule::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: calc(100% - 4rem); /* Subtracting bottom margin of last movie info */
+    background-color: #ff3030;
 }
 
 .schedule-item {
