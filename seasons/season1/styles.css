@@ -4,90 +4,26 @@
     box-sizing: border-box;
 }
 
-/* Define the gap size as a variable */
-:root {
-    --grid-gap: 5px;
-}
-
 body {
-    background-color: #fff;
+    background-color: #000;
     font-family: 'Inter', sans-serif;
-    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    color: white;
 }
 
 .main-content {
     flex: 1;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
     padding: 2rem;
-    background-color: #fff;
-}
-
-.container {
+    background-color: #000;
     position: relative;
-    width: 80vmin;
-    height: 80vmin;
-    max-width: 90vw;
-    margin: 0 auto;
-}
-
-/* Poster styles */
-.poster-container {
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-
-.poster-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
-}
-
-.grid-container {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: repeat(12, 1fr);
-    gap: var(--grid-gap); /* Use the variable */
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255, 255, 255, 0.8);
-    position: relative;
-}
-
-.grid-cell {
-    width: 100%;
-    height: 100%;
-}
-
-.horizontal-lines {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 5;
-}
-
-.horizontal-line {
-    position: absolute;
-    width: 102%;
-    height: 1.5px;
-    background-color: rgba(255, 255, 255, 0.85);
-    left: -1%;
 }
 
 .text-overlay {
-    position: absolute;
-    top: 10%; 
-    left: 8%;
-    z-index: 10;
+    margin-bottom: 2rem;
     text-align: left;
 }
 
@@ -104,33 +40,32 @@ h1 {
     transform: scaleY(1.05);
 }
 
-/* Movie text styling in the grid - removed frame */
-.movie-text {
-    position: absolute;
-    font-size: 1.4vw;
-    line-height: 1.2;
-    font-weight: 500;
-    z-index: 15;
-    padding: 8px;
+.main-content {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    color: #000;
-    overflow: hidden;
-    box-sizing: border-box;
-    /* Important: NO border here */
-    border: none;
+    padding: 2rem;
+    background-color: #000;
+    position: relative;
 }
 
-.movie-text strong {
-    font-weight: 700; /* Make sure the title is properly bold */
+.container {
+    width: 80vmin;
+    height: auto;
+    max-width: 90vw;
+    margin: 0 auto;
 }
 
-.movie-date-small {
-    font-size: 1.1vw;
-    color: #ffffff;
+.poster-container {
+    width: 100%;
+    height: auto;
+}
+
+.poster-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
     display: block;
-    margin-top: 3px;
 }
 
 footer {
@@ -138,6 +73,13 @@ footer {
     color: white;
     padding: 4rem 2rem;
     width: 100%;
+}
+
+.program-heading {
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin: 2rem 0 1rem 0;
+    color: #ff3030;
 }
 
 .about-section {
@@ -148,30 +90,16 @@ footer {
     gap: 3rem;
 }
 
-.festival-info {
-    margin-bottom: 2rem;
-}
-
 h2 {
     font-size: 2rem;
     margin-bottom: 0.5rem;
     color: #ff3030;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
 }
 
 h3 {
     font-size: 1.5rem;
     margin-bottom: 0.5rem;
     color: #fff;
-}
-
-.schedule-heading {
-    color: #ff3030;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    font-size: 1.7rem;
 }
 
 p {
@@ -187,145 +115,18 @@ p {
     color: #ff3030;
 }
 
-.description {
-    margin-bottom: 2rem;
-}
-
 .season-heading {
-    font-weight: 700; /* Bold */
+    font-weight: 700;
     font-size: 1.5rem;
     margin-bottom: 1.5rem;
-    color: white;    
+    color: white;
     text-decoration: underline;
-}
-
-.schedule-container {
-    margin: 2rem 0;
 }
 
 .schedule {
     padding-left: 1rem;
     border-left: 3px solid #ff3030;
-}
-
-.invitation {
-    margin-top: 2.5rem;
-    padding: 1.5rem;
-    border: 1px solid #ff3030;
-    border-radius: 4px;
-    text-align: center;
-}
-
-.closing {
-    margin: 0;
-    font-weight: 500;
-    font-size: 1.2rem;
-}
-
-.director-info {
-    font-size: 0.9em; /* Slightly smaller than the movie text */
-    font-weight: 400; /* Not bold */
-    opacity: 0.9;
-    margin-bottom: 0; /* Ensure no extra gap */
-    display: inline-block;
-    line-height: 1.3;
-}
-
-/* Add this for the program heading */
-.program-heading {
-    font-weight: 700; /* Bold */
-    font-size: 1.5rem;
-    margin: 2rem 0 1rem 0;
-    color: #ff3030; /* Match the welcome text color */
-}
-
-/* Media queries for responsiveness */
-@media (max-width: 900px) {
-    .about-section {
-        grid-template-columns: 1fr;
-    }
-}
-
-@media (max-width: 768px) {
-    h1 {
-        font-size: 16vw; /* Increased from 11vw */
-    }
-    
-    h2 {
-        font-size: 1.8rem;
-    }
-    
-    h3 {
-        font-size: 1.3rem;
-    }
-    
-    p {
-        font-size: 1rem;
-    }
-    
-    .movie-text {
-        font-size: 2.8vw;
-    }
-    
-    .movie-date-small {
-        font-size: 2vw;
-    }
-
-    .container {
-        width: 90vw; /* Use 90% of viewport width */
-        height: auto; /* Let height be determined by poster aspect ratio */
-        max-width: none;
-    }
-}
-
-@media (max-width: 480px) {
-    h1 {
-        font-size: 16vw; /* Increased size for even smaller screens */
-    }
-    
-    .main-content {
-        padding: 1rem;
-    }
-    
-    footer {
-        padding: 2rem 1rem;
-    }
-    
-    h2 {
-        font-size: 1.5rem;
-    }
-    
-    h3 {
-        font-size: 1.2rem;
-    }
-    
-    .movie-text {
-        font-size: 3.5vw;
-    }
-    
-    .movie-date-small {
-        font-size: 2.8vw;
-    }
-    
-    .welcome {
-        font-size: 1.3rem;
-    }
-    
-    .closing {
-        font-size: 1.1rem;
-    }
-
-    .container {
-        width: 95vw; /* Use almost full viewport width */
-        height: auto; /* Let height be determined by poster aspect ratio */
-        margin: 0 auto;
-    }
-}
-.schedule {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    margin-top: 2rem;
+    margin: 2rem 0;
 }
 
 .schedule-item {
@@ -350,19 +151,39 @@ p {
 }
 
 .alert {
-    color: #007BFF; /* Bright blue */
+    color: #007BFF;
     font-size: 0.95rem;
     font-weight: 500;
     margin-top: 0.2rem;
 }
 
-.strikethrough {
-    text-decoration: line-through;
-    opacity: 0.7;
+.past .movie-date,
+.past .movie-info {
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
 }
 
-.past .movie-date,  /*to make past events less opaque */
-.past .movie-info {
-    opacity: 0.5;  /* Adjust the opacity  */
-    transition: opacity 0.3s ease; /* Optional: smooth transition */
+/* Media queries for responsiveness */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 16vw;
+    }
+    
+    .container {
+        width: 90vw;
+    }
+
+    .about-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-content {
+        padding: 1rem;
+    }
+
+    .container {
+        width: 95vw;
+    }
 }
