@@ -150,6 +150,16 @@ p {
     color: #fff;
 }
 
+.director-info {
+    font-size: 0.95em;
+    font-weight: 400;
+    opacity: 0.9;
+    margin-bottom: 0.4rem;
+    display: block;
+    line-height: 1.4;
+    word-break: break-word; /* ensures long titles wrap */
+}
+
 .alert {
     color: #007BFF;
     font-size: 0.95rem;
