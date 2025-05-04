@@ -1,0 +1,55 @@
+name: Create New Season
+
+on:
+  workflow_dispatch:
+    inputs:
+      season_theme:
+        description: 'Theme for the new season'
+        required: true
+        default: 'NEW THEME'
+      
+jobs:
+  create-season:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Find latest season number
+        id: find-latest
+        run: |
+          if [ -d "seasons" ]; then
+            latest=$(ls seasons | grep 'season' | sed 's/season//' | sort -n | tail -n 1)
+            if [ -z "$latest" ]; then
+              latest=0
+            fi
+          else
+            latest=0
+            mkdir -p seasons
+          fi
+          new_season=$((latest + 1))
+          echo "latest_season=$latest" >> $GITHUB_OUTPUT
+          echo "new_season=$new_season" >> $GITHUB_OUTPUT
+          echo "Found latest season: season$latest, creating: season$new_season"
+      
+      - name: Create new season directory
+        run: |
+          new_season="${{ steps.find-latest.outputs.new_season }}"
+          mkdir -p "seasons/season$new_season"
+          cp -r templates/season-template/* "seasons/season$new_season/"
+      
+      - name: Update season number and theme
+        run: |
+          new_season="${{ steps.find-latest.outputs.new_season }}"
+          theme="${{ github.event.inputs.season_theme }}"
+          sed -i "s/\[SEASON_NUMBER\]/$new_season/g" "seasons/season$new_season/index.html"
+          sed -i "s/\[THEME\]/$theme/g" "seasons/season$new_season/index.html"
+      
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add seasons/
+          git commit -m "Create season ${{ steps.find-latest.outputs.new_season }} with theme: ${{ github.event.inputs.season_theme }}"
+          git push origin main
