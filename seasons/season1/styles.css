@@ -204,6 +204,33 @@ p {
     transition: opacity 0.3s ease;
 }
 
+.nav-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 1rem 2rem;
+    z-index: 100;
+}
+
+.archive-button {
+    background-color: #ff3030;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    display: inline-block;
+}
+
+.archive-button:hover {
+    background-color: #e52020;
+}
+
+/* Remove old archive-link styles as they're no longer needed but keep the button styles for other uses */
 .archive-link {
     text-align: center;
     margin: 2rem 0;
@@ -239,6 +266,10 @@ p {
     .about-section {
         grid-template-columns: 1fr;
     }
+
+    .nav-container {
+        padding: 0.5rem 1rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -248,5 +279,14 @@ p {
 
     .container {
         width: 95vw;
+    }
+    
+    .nav-container {
+        padding: 0.5rem 1rem;
+    }
+    
+    .archive-button {
+        padding: 0.4rem 1rem;
+        font-size: 0.9rem;
     }
 }
