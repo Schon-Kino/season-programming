@@ -40,6 +40,15 @@ h1 {
     transform: scaleY(1.05);
 }
 
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    background-color: #000;
+    position: relative;
+}
+
 .container {
     width: 80vmin;
     height: auto;
@@ -50,16 +59,13 @@ h1 {
 .poster-container {
     width: 100%;
     height: auto;
-    aspect-ratio: 1 / 1.4;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-.klein-blue-square {
+.poster-image {
     width: 100%;
-    height: 100%;
-    background-color: #002FA7; /* International Klein Blue */
+    height: auto;
+    object-fit: contain;
+    display: block;
 }
 
 footer {
@@ -123,6 +129,7 @@ p {
     margin: 2rem 0;
 }
 
+/* Have red line stop exactly on the last movie */
 .schedule::before {
     content: '';
     position: absolute;
@@ -161,7 +168,7 @@ p {
     opacity: 0.9;
     display: block;
     line-height: 1;
-    word-break: break-word;
+    word-break: break-word; /* ensures long titles wrap */
 }
 
 .short-film {
@@ -181,6 +188,20 @@ p {
     line-height: 1;
     opacity: 0.9;
     color: white;
+}
+
+.alert {
+    color: #007BFF;
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-top: 0.2rem;
+    margin-bottom: 0rem;
+}
+
+.past .movie-date,
+.past .movie-info {
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
 }
 
 @media (max-width: 768px) {
