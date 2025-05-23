@@ -1,4 +1,4 @@
-name: Deploy Latest Season to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -14,23 +14,41 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Create deployment directory structure
+      - name: Find latest season number
+        id: find-latest
         run: |
-          mkdir -p deploy
-          # Copy current seasons folder
-          cp -r seasons deploy/
+          latest=$(ls seasons | grep 'season' | sed 's/season//' | sort -n | tail -n 1)
+          echo "latest_season=$latest" >> $GITHUB_OUTPUT
+          echo "Latest season is $latest"
+
+      - name: Setup deployment directory
+        run: |
+          # Create root directory for GitHub Pages
+          mkdir -p gh-pages
+          
+          # Copy the latest season content to the root
+          cp -r seasons/season${{ steps.find-latest.outputs.latest_season }}/* gh-pages/
+          
           # Copy archive folder
-          cp -r archive deploy/
-          # Copy shared data files
-          cp seasons-data.json deploy/
-          # Copy any shared images if needed
-          if [ -d "images" ]; then
-            cp -r images deploy/
-          fi
+          mkdir -p gh-pages/archive
+          cp -r archive/* gh-pages/archive/
+          
+          # Copy shared resources
+          cp seasons-data.json gh-pages/
+          
+          # Copy all seasons for the archive to reference
+          mkdir -p gh-pages/seasons
+          cp -r seasons/* gh-pages/seasons/
+          
+          # Create a root index.html that redirects to latest season
+          echo '<!DOCTYPE html><html><head><meta http-equiv="refresh" content="0;URL=seasons/season${{ steps.find-latest.outputs.latest_season }}/" /></head><body></body></html>' > gh-pages/index.html
+          
+          ls -la gh-pages
+          ls -la gh-pages/archive
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: ${{ github.workspace }}/deploy
+          publish_dir: ${{ github.workspace }}/gh-pages
