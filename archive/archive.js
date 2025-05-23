@@ -4,9 +4,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function fetchSeasons() {
     try {
-        const response = await fetch('/seasons-data.json');
+        // Try both absolute and relative paths
+        let response = await fetch('/seasons-data.json');
         if (!response.ok) {
-            throw new Error('Failed to fetch seasons data');
+            response = await fetch('../seasons-data.json');
+            if (!response.ok) {
+                throw new Error('Failed to fetch seasons data');
+            }
         }
         return await response.json();
     } catch (error) {
@@ -23,21 +27,23 @@ async function displaySeasons() {
         const seasons = data.seasons || [];
         
         const grid = document.getElementById('seasons-grid');
-        
-        // Clear loading message
         grid.innerHTML = '';
         
         // Sort seasons in descending order (newest first)
         const sortedSeasons = [...seasons].sort((a, b) => b.number - a.number);
+        
+        // Determine if we're in a GitHub Pages subpath deployment
+        const basePath = document.location.pathname.includes('season-programming') ? 
+                        '/season-programming' : '';
         
         sortedSeasons.forEach(season => {
             const card = document.createElement('div');
             card.className = 'season-card';
             
             card.innerHTML = `
-                <a href="/seasons/season${season.number}/">
+                <a href="${basePath}/seasons/season${season.number}/">
                     <div class="card-image">
-                        <img src="/seasons/season${season.number}/images/Poster.jpg" 
+                        <img src="${basePath}/seasons/season${season.number}/images/Poster.jpg" 
                              alt="Season ${season.number} Poster" 
                              onerror="this.onerror=null; this.src='placeholder.jpg'">
                     </div>

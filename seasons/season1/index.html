@@ -31,10 +31,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        // Determine if we're in a GitHub Pages subpath deployment
+        const basePath = window.location.pathname.includes('season-programming') ? 
+                        '/season-programming' : '';
+                        
+        // Set the base href dynamically
+        document.write(`<base href="${basePath}/">`);
+    </script>
 </head>
 <body>
     <div class="nav-container">
-        <a href="/archive/" class="archive-button">Season Archive</a>
+        <a href="archive/" class="archive-button">Season Archive</a>
     </div>
     
     <div class="main-content">
