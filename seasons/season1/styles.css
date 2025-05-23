@@ -17,14 +17,30 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 2rem;
+    padding: 0 2rem 2rem;
     background-color: #000;
     position: relative;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2rem 2rem 0;
+    width: 100%;
 }
 
 .text-overlay {
     margin-bottom: 2rem;
     text-align: left;
+    flex: 1;
+}
+
+.nav-container {
+    position: static;
+    text-align: right;
+    padding: 0;
+    z-index: 100;
 }
 
 h1 {
@@ -38,15 +54,6 @@ h1 {
     letter-spacing: -0.02em;
     transform-origin: left;
     transform: scaleY(1.05);
-}
-
-.main-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 2rem;
-    background-color: #000;
-    position: relative;
 }
 
 .container {
@@ -202,13 +209,6 @@ p {
 .past .movie-info {
     opacity: 0.5;
     transition: opacity 0.3s ease;
-}
-
-.nav-container {
-    position: static; /* Change from 'fixed' to 'static' */
-    text-align: right;
-    padding: 1rem 2rem;
-    z-index: 100;
 }
 
 .archive-button {
