@@ -14,16 +14,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Find latest season folder
-        id: find-latest
+      - name: Create deployment directory structure
         run: |
-          latest=$(ls seasons | grep 'season' | sed 's/season//' | sort -n | tail -n 1)
-          echo "Latest season is season$latest"
-          echo "season_dir=seasons/season$latest" >> $GITHUB_OUTPUT
+          mkdir -p deploy
+          # Copy current seasons folder
+          cp -r seasons deploy/
+          # Copy archive folder
+          cp -r archive deploy/
+          # Copy shared data files
+          cp seasons-data.json deploy/
+          # Copy any shared images if needed
+          if [ -d "images" ]; then
+            cp -r images deploy/
+          fi
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: ${{ github.workspace }}/${{ steps.find-latest.outputs.season_dir }}
+          publish_dir: ${{ github.workspace }}/deploy

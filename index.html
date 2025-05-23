@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>schön.kino - Redirecting to current season</title>
+    <script>
+        // Find latest season from the seasons data and redirect
+        fetch('seasons-data.json')
+            .then(response => response.json())
+            .then(data => {
+                const seasons = data.seasons || [];
+                if (seasons.length > 0) {
+                    const latestSeason = Math.max(...seasons.map(s => s.number));
+                    window.location.href = `seasons/season${latestSeason}/`;
+                } else {
+                    document.body.innerHTML = '<h1>No seasons found</h1>';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading season data:', error);
+                document.body.innerHTML = '<h1>Error loading seasons</h1>';
+            });
+    </script>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Loading latest season...</h1>
+</body>
+</html>
