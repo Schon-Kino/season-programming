@@ -92,12 +92,13 @@ h1 {
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain; /* Change from 'cover' to 'contain' to avoid cropping */
+    background-color: #111; /* Add background color for margins */
     transition: transform 0.5s ease;
 }
 
 .season-card:hover .card-image img {
-    transform: scale(1.05);
+    transform: scale(1.03); /* Reduce zoom effect */
 }
 
 .card-content {
