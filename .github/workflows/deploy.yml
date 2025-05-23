@@ -26,31 +26,48 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      - name: Find latest season number
+        id: find-latest
+        run: |
+          latest=$(ls seasons | grep 'season' | sed 's/season//' | sort -n | tail -n 1)
+          echo "latest_season=$latest" >> $GITHUB_OUTPUT
+          echo "Latest season is $latest"
+
       - name: Create GitHub Pages structure
         run: |
           # Create deployment directory
           mkdir -p _site
           
-          # Copy all content (excluding unnecessary files)
-          rsync -av --exclude=".git" --exclude=".github" --exclude="_site" --exclude="README.md" ./ _site/
+          # Copy the latest season content to root
+          cp -r seasons/season${{ steps.find-latest.outputs.latest_season }}/* _site/
           
-          # Make sure root index.html exists - create a simple redirect to latest season
-          LATEST_SEASON=$(ls _site/seasons | grep 'season' | sed 's/season//' | sort -n | tail -n 1)
-          echo "<!DOCTYPE html>
-          <html>
-          <head>
-            <meta http-equiv=\"refresh\" content=\"0; url=seasons/season${LATEST_SEASON}/\">
-            <title>Redirecting to latest season</title>
-          </head>
-          <body>
-            Redirecting to the <a href=\"seasons/season${LATEST_SEASON}/\">latest season</a>...
-          </body>
-          </html>" > _site/index.html
+          # Create archive directory
+          mkdir -p _site/archive
+          
+          # Copy archive HTML and CSS
+          cp -r archive/* _site/archive/
+          
+          # Create seasons directory inside archive
+          mkdir -p _site/archive/seasons
+          
+          # Copy all seasons to archive/seasons
+          cp -r seasons/* _site/archive/seasons/
+          
+          # Create shared images directory
+          mkdir -p _site/images
+          if [ -d "images" ]; then
+            cp -r images/* _site/images/
+          fi
+          
+          # Copy seasons data JSON
+          cp seasons-data.json _site/
+          cp seasons-data.json _site/archive/
           
           # Create .nojekyll file to disable Jekyll processing
           touch _site/.nojekyll
           
           # List the directory structure for debugging
+          echo "Site structure:"
           find _site -type d | sort
 
       # Fix: Ensure we're using the latest version of upload-pages-artifact
