@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 async function fetchSeasons() {
     try {
-        const response = await fetch('../seasons-data.json');
+        const response = await fetch('/seasons-data.json');
         if (!response.ok) {
             throw new Error('Failed to fetch seasons data');
         }
@@ -34,13 +34,10 @@ async function displaySeasons() {
             const card = document.createElement('div');
             card.className = 'season-card';
             
-            // Use relative paths
-            const seasonPath = `../seasons/season${season.number}/`;
-            
             card.innerHTML = `
-                <a href="${seasonPath}">
+                <a href="/seasons/season${season.number}/">
                     <div class="card-image">
-                        <img src="${seasonPath}images/Poster.jpg" 
+                        <img src="/seasons/season${season.number}/images/Poster.jpg" 
                              alt="Season ${season.number} Poster" 
                              onerror="this.onerror=null; this.src='placeholder.jpg'">
                     </div>
