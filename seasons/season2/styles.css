@@ -59,16 +59,13 @@ h1 {
 .poster-container {
     width: 100%;
     height: auto;
-    aspect-ratio: 1 / 1.4;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-.klein-blue-square {
+.poster-image {
     width: 100%;
-    height: 100%;
-    background-color: #002FA7; /* International Klein Blue */
+    height: auto;
+    object-fit: contain;
+    display: block;
 }
 
 footer {
