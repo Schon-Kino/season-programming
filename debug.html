@@ -10,6 +10,7 @@
             background: #000;
             color: #eee;
             padding: 20px;
+            line-height: 1.6;
         }
         h1, h2 {
             color: #ff3030;
@@ -19,15 +20,47 @@
             padding: 15px;
             border-radius: 5px;
             overflow-x: auto;
+            margin-bottom: 20px;
         }
         a {
             color: #ff3030;
         }
+        .file-content {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .test-item {
+            padding: 5px;
+            border-bottom: 1px solid #333;
+        }
+        .success {
+            color: #4CAF50;
+        }
+        .error {
+            color: #F44336;
+        }
+        .warning {
+            color: #FF9800;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            text-align: left;
+            padding: 8px;
+            border-bottom: 1px solid #333;
+        }
+        .image-preview {
+            max-width: 150px;
+            max-height: 210px;
+            border: 1px solid #444;
+        }
     </style>
 </head>
 <body>
-    <h1>schön.kino - Deployment Debug Page</h1>
-    <p>This page helps diagnose deployment issues. Created: <span id="timestamp"></span></p>
+    <h1>schön.kino - Enhanced Debug Page</h1>
+    <p>Created: <span id="timestamp"></span></p>
     
     <h2>Page Information</h2>
     <div class="debug-info" id="page-info"></div>
@@ -35,17 +68,50 @@
     <h2>Seasons Data</h2>
     <div class="debug-info" id="seasons-data">Loading...</div>
     
-    <h2>Directory Tests</h2>
+    <h2>Image Tests</h2>
+    <div class="debug-info">
+        <table>
+            <tr>
+                <th>Image Path</th>
+                <th>Status</th>
+                <th>Preview</th>
+            </tr>
+            <tr>
+                <td>Season 1 Poster (archive)</td>
+                <td id="season1-image-status-archive"></td>
+                <td><img id="season1-image-archive" class="image-preview" alt="Season 1 Poster (archive)"></td>
+            </tr>
+            <tr>
+                <td>Season 1 Poster (direct)</td>
+                <td id="season1-image-status-direct"></td>
+                <td><img id="season1-image-direct" class="image-preview" alt="Season 1 Poster (direct)"></td>
+            </tr>
+            <tr>
+                <td>Season 2 Poster (archive)</td>
+                <td id="season2-image-status-archive"></td>
+                <td><img id="season2-image-archive" class="image-preview" alt="Season 2 Poster (archive)"></td>
+            </tr>
+            <tr>
+                <td>Season 2 Poster (direct)</td>
+                <td id="season2-image-status-direct"></td>
+                <td><img id="season2-image-direct" class="image-preview" alt="Season 2 Poster (direct)"></td>
+            </tr>
+        </table>
+    </div>
+    
+    <h2>Resource Tests</h2>
     <div class="debug-info" id="dir-tests">Testing...</div>
     
     <h2>Quick Links</h2>
-    <ul>
-        <li><a href="/">Root</a></li>
-        <li><a href="/season-programming/">Project Root</a></li>
-        <li><a href="/season-programming/archive/">Archive</a></li>
-        <li><a href="/season-programming/seasons/season1/">Season 1 Direct</a></li>
-        <li><a href="/season-programming/seasons/season2/">Season 2 Direct</a></li>
-    </ul>
+    <div class="debug-info">
+        <ul>
+            <li><a href="/">Root</a></li>
+            <li><a href="/season-programming/">Project Root</a></li>
+            <li><a href="/season-programming/archive/">Archive</a></li>
+            <li><a href="/season-programming/seasons/season1/">Season 1 Direct</a></li>
+            <li><a href="/season-programming/seasons/season2/">Season 2 Direct</a></li>
+        </ul>
+    </div>
     
     <script>
         document.getElementById('timestamp').textContent = new Date().toISOString();
@@ -62,36 +128,81 @@
         document.getElementById('page-info').innerHTML = 
             Object.entries(pageInfo).map(([k,v]) => `<strong>${k}:</strong> ${v}`).join('<br>');
         
+        // Function to generate a cache-busting parameter
+        function cacheBuster() {
+            return 'nocache=' + Date.now() + Math.random().toString(36).substring(2, 8);
+        }
+        
+        // Test image loading with cache busting
+        function testImage(src, statusId, imageId) {
+            const img = document.getElementById(imageId);
+            const statusElem = document.getElementById(statusId);
+            
+            statusElem.textContent = 'Loading...';
+            statusElem.className = 'warning';
+            
+            const cacheBustSrc = src + '?' + cacheBuster();
+            img.src = cacheBustSrc;
+            
+            img.onload = function() {
+                statusElem.textContent = 'OK';
+                statusElem.className = 'success';
+            };
+            
+            img.onerror = function() {
+                statusElem.textContent = 'Failed to load';
+                statusElem.className = 'error';
+                img.src = ''; // Clear the broken image
+            };
+        }
+        
+        // Test various image paths
+        testImage('./archive/seasons/season1/images/Poster.jpg', 'season1-image-status-archive', 'season1-image-archive');
+        testImage('./seasons/season1/images/Poster.jpg', 'season1-image-status-direct', 'season1-image-direct');
+        testImage('./archive/seasons/season2/images/Poster.jpg', 'season2-image-status-archive', 'season2-image-archive');
+        testImage('./seasons/season2/images/Poster.jpg', 'season2-image-status-direct', 'season2-image-direct');
+        
         // Load seasons data
         fetch('./seasons-data.json')
             .then(response => response.ok ? response.json() : Promise.reject('Failed to load seasons data'))
             .then(data => {
                 document.getElementById('seasons-data').innerHTML = 
                     `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                    
+                // Check if season 2 is in the data
+                const seasonTwoExists = data.seasons && data.seasons.some(s => s.number === 2);
+                if (!seasonTwoExists) {
+                    document.getElementById('seasons-data').innerHTML += 
+                        `<div class="error">WARNING: Season 2 is not defined in seasons-data.json!</div>`;
+                }
             })
             .catch(err => {
                 document.getElementById('seasons-data').innerHTML = 
-                    `<span style="color:red">Error: ${err}</span>`;
+                    `<span class="error">Error: ${err}</span>`;
             });
             
         // Check resource existence
         const resourcesToCheck = [
             './index.html',
+            './seasons-data.json',
             './seasons/season1/index.html',
             './seasons/season1/images/Poster.jpg',
             './seasons/season2/index.html',
             './seasons/season2/images/Poster.jpg',
-            './archive/index.html'
+            './archive/index.html',
+            './archive/seasons-data.json',
+            './archive/seasons/season1/index.html',
+            './archive/seasons/season2/index.html'
         ];
         
         Promise.all(resourcesToCheck.map(url => 
-            fetch(url, {method: 'HEAD'})
+            fetch(url, {method: 'HEAD', cache: 'no-store'})
                 .then(response => ({url, status: response.status, ok: response.ok}))
                 .catch(error => ({url, status: 'Error', ok: false, error: error.message}))
         ))
         .then(results => {
             document.getElementById('dir-tests').innerHTML = 
-                results.map(r => `<div>${r.url}: <span style="color:${r.ok?'green':'red'}">${r.status}</span></div>`).join('');
+                results.map(r => `<div class="test-item ${r.ok ? 'success' : 'error'}">${r.url}: <span>${r.status}</span></div>`).join('');
         });
     </script>
 </body>

@@ -66,38 +66,41 @@
     </div>
     
     <script>
-        const errorElem = document.getElementById('error-message');
-        const loadingElem = document.getElementById('loading');
-        
-        // Function to display error message
-        function showError(message) {
-            errorElem.style.display = 'block';
-            errorElem.textContent = message;
-            loadingElem.textContent = 'Could not redirect automatically';
-        }
-        
-        // Try to load seasons data and redirect
-        fetch('./seasons-data.json')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch seasons data (status: ${response.status})`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                const seasons = data.seasons || [];
-                if (seasons.length > 0) {
-                    const latestSeason = Math.max(...seasons.map(s => s.number));
-                    console.log('Latest season found:', latestSeason);
-                    window.location.href = `seasons/season${latestSeason}/`;
-                } else {
-                    showError('No seasons found in data');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                showError(`Error loading season data: ${error.message}`);
-            });
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            const errorElem = document.getElementById('error-message');
+            const loadingElem = document.getElementById('loading');
+            
+            // Function to display error message
+            function showError(message) {
+                errorElem.style.display = 'block';
+                errorElem.textContent = message;
+                loadingElem.textContent = 'Could not redirect automatically';
+            }
+            
+            // Try to load seasons data and redirect
+            fetch('./seasons-data.json')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch seasons data (status: ${response.status})`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const seasons = data.seasons || [];
+                    if (seasons.length > 0) {
+                        const latestSeason = Math.max(...seasons.map(s => s.number));
+                        console.log('Latest season found:', latestSeason);
+                        window.location.href = `seasons/season${latestSeason}/`;
+                    } else {
+                        showError('No seasons found in data');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showError(`Error loading season data: ${error.message}`);
+                });
+        });
     </script>
 </body>
 </html>
