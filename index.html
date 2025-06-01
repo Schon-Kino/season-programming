@@ -6,20 +6,31 @@
     <title>schön.kino - Redirecting to current season</title>
     <script>
         // Find latest season from the seasons data and redirect
-        fetch('seasons-data.json')
-            .then(response => response.json())
+        fetch('./seasons-data.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 const seasons = data.seasons || [];
                 if (seasons.length > 0) {
                     const latestSeason = Math.max(...seasons.map(s => s.number));
-                    window.location.href = `seasons/season${latestSeason}/`;
+                    console.log('Latest season found:', latestSeason);
+                    
+                    // Construct the proper URL path based on whether we're in GitHub Pages or not
+                    const basePath = window.location.pathname.includes('season-programming') ? 
+                                    '/season-programming' : '';
+                    
+                    window.location.href = `${basePath}/seasons/season${latestSeason}/`;
                 } else {
                     document.body.innerHTML = '<h1>No seasons found</h1>';
                 }
             })
             .catch(error => {
                 console.error('Error loading season data:', error);
-                document.body.innerHTML = '<h1>Error loading seasons</h1>';
+                document.body.innerHTML = '<h1>Error loading seasons</h1><p>' + error.message + '</p>';
             });
     </script>
     <style>
@@ -28,14 +39,18 @@
             color: white;
             font-family: 'Inter', sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            padding: 1rem;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <h1>Loading latest season...</h1>
+    <p>If you are not redirected automatically, <a href="./seasons/season1/" style="color: #ff3030;">click here</a>.</p>
 </body>
 </html>

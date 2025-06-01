@@ -51,16 +51,24 @@ jobs:
           # Create deployment directory
           mkdir -p _site
           
-          # Copy the latest season content to root
-          cp -r seasons/season${{ steps.find-latest.outputs.latest_season }}/* _site/
-          
-          # Copy root index.html for redirection
+          # First, copy the root files that should be at the site root
           cp index.html _site/
+          cp seasons-data.json _site/
+          
+          # Now, copy the latest season content to the root
+          # BUT don't overwrite index.html that we just copied
+          find seasons/season${{ steps.find-latest.outputs.latest_season }} -type f | grep -v "index.html" | xargs -I{} cp {} _site/
+          
+          # Create necessary directories and copy folders
+          mkdir -p _site/images
+          if [ -d "seasons/season${{ steps.find-latest.outputs.latest_season }}/images" ]; then
+            cp -r seasons/season${{ steps.find-latest.outputs.latest_season }}/images/* _site/images/
+          fi
           
           # Create archive directory
           mkdir -p _site/archive
           
-          # Copy archive HTML and CSS
+          # Copy archive HTML, CSS and JS
           cp -r archive/* _site/archive/
           
           # Create seasons directory inside archive
@@ -69,14 +77,7 @@ jobs:
           # Copy all seasons to archive/seasons
           cp -r seasons/* _site/archive/seasons/
           
-          # Create shared images directory
-          mkdir -p _site/images
-          if [ -d "images" ]; then
-            cp -r images/* _site/images/
-          fi
-          
-          # Copy seasons data JSON
-          cp seasons-data.json _site/
+          # Copy seasons data JSON to archive
           cp seasons-data.json _site/archive/
           
           # Create .nojekyll file to disable Jekyll processing
@@ -84,7 +85,7 @@ jobs:
           
           # List the directory structure for debugging
           echo "Site structure:"
-          find _site -type d | sort
+          find _site -type f | grep -v "/_" | sort
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
