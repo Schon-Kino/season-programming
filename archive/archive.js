@@ -33,27 +33,32 @@ async function displaySeasons() {
         // Sort seasons in descending order (newest first)
         const sortedSeasons = [...seasons].sort((a, b) => b.number - a.number);
         
-        // Determine if we're in a GitHub Pages subpath deployment
-        const basePath = window.location.pathname.includes('season-programming') ? 
-                        '/season-programming' : '';
+        // Log what we're about to display
+        console.log('Displaying seasons:', sortedSeasons);
         
         sortedSeasons.forEach(season => {
             const card = document.createElement('div');
             card.className = 'season-card';
             
-            // Generate a random cache-busting string
-            const cacheBuster = Date.now() + Math.random().toString(36).substring(2, 8);
+            // Generate a unique cache busting string
+            const uniqueId = Date.now() + '-' + Math.random().toString(36).substring(2, 9);
+            
+            // Log the image URL we're creating
+            const imagePath = `seasons/season${season.number}/images/Poster.jpg?v=${uniqueId}`;
+            console.log(`Season ${season.number} image path: ${imagePath}`);
             
             card.innerHTML = `
                 <a href="seasons/season${season.number}/">
                     <div class="card-image">
-                        <img src="seasons/season${season.number}/images/Poster.jpg?nocache=${cacheBuster}" 
-                             alt="Season ${season.number} Poster" 
-                             onerror="this.onerror=null; this.src='../images/placeholder.jpg'">
+                        <img 
+                            src="${imagePath}" 
+                            alt="Season ${season.number} Poster" 
+                            onerror="this.onerror=null; console.error('Failed to load image for season ${season.number}'); this.src='../images/placeholder.jpg'"
+                        >
                     </div>
                     <div class="card-content">
                         <div class="season-number">Season ${season.number}</div>
-                        <div class="season-theme">${season.theme}</div>
+                        <div class="season-theme">${season.theme || ''}</div>
                     </div>
                 </a>
             `;
@@ -67,5 +72,7 @@ async function displaySeasons() {
         }
     } catch (error) {
         console.error('Error displaying seasons:', error);
+        document.getElementById('seasons-grid').innerHTML = 
+            `<div class="error">Error loading seasons: ${error.message}</div>`;
     }
 }

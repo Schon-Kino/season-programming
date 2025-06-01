@@ -3,13 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>schön.kino - Redirecting to current season</title>
+    <title>schön.kino - living space cinema</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Inter', 'Helvetica', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 3rem;
+            color: #ff3030;
+            margin-bottom: 1rem;
+        }
+        p {
+            font-size: 1.2rem;
+            margin: 0.5rem 0;
+        }
+        .links {
+            margin-top: 2rem;
+        }
+        .button {
+            display: inline-block;
+            background-color: #ff3030;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            margin: 10px;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+        #error-message {
+            color: #ff3030;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(255, 0, 0, 0.1);
+            border-radius: 4px;
+            max-width: 600px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>schön.kino</h1>
+    <p>living space cinema</p>
+    
+    <div id="loading">Loading latest season...</div>
+    <div id="error-message"></div>
+    
+    <div class="links">
+        <a href="seasons/season1/" class="button">Season 1</a>
+        <a href="seasons/season2/" class="button">Season 2</a>
+        <a href="archive/" class="button">Archive</a>
+        <a href="debug.html" class="button" style="background-color: #333;">Debug</a>
+    </div>
+    
     <script>
-        // Find latest season from the seasons data and redirect
+        const errorElem = document.getElementById('error-message');
+        const loadingElem = document.getElementById('loading');
+        
+        // Function to display error message
+        function showError(message) {
+            errorElem.style.display = 'block';
+            errorElem.textContent = message;
+            loadingElem.textContent = 'Could not redirect automatically';
+        }
+        
+        // Try to load seasons data and redirect
         fetch('./seasons-data.json')
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error(`Failed to fetch seasons data (status: ${response.status})`);
                 }
                 return response.json();
             })
@@ -18,39 +89,15 @@
                 if (seasons.length > 0) {
                     const latestSeason = Math.max(...seasons.map(s => s.number));
                     console.log('Latest season found:', latestSeason);
-                    
-                    // Construct the proper URL path based on whether we're in GitHub Pages or not
-                    const basePath = window.location.pathname.includes('season-programming') ? 
-                                    '/season-programming' : '';
-                    
-                    window.location.href = `${basePath}/seasons/season${latestSeason}/`;
+                    window.location.href = `seasons/season${latestSeason}/`;
                 } else {
-                    document.body.innerHTML = '<h1>No seasons found</h1>';
+                    showError('No seasons found in data');
                 }
             })
             .catch(error => {
-                console.error('Error loading season data:', error);
-                document.body.innerHTML = '<h1>Error loading seasons</h1><p>' + error.message + '</p>';
+                console.error('Error:', error);
+                showError(`Error loading season data: ${error.message}`);
             });
     </script>
-    <style>
-        body {
-            background-color: black;
-            color: white;
-            font-family: 'Inter', sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            padding: 1rem;
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <h1>Loading latest season...</h1>
-    <p>If you are not redirected automatically, <a href="./seasons/season1/" style="color: #ff3030;">click here</a>.</p>
 </body>
 </html>

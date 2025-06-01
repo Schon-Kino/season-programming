@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>schön.kino - Debug Page</title>
+    <style>
+        body {
+            font-family: monospace;
+            background: #000;
+            color: #eee;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #ff3030;
+        }
+        .debug-info {
+            background: #222;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        a {
+            color: #ff3030;
+        }
+    </style>
+</head>
+<body>
+    <h1>schön.kino - Deployment Debug Page</h1>
+    <p>This page helps diagnose deployment issues. Created: <span id="timestamp"></span></p>
+    
+    <h2>Page Information</h2>
+    <div class="debug-info" id="page-info"></div>
+    
+    <h2>Seasons Data</h2>
+    <div class="debug-info" id="seasons-data">Loading...</div>
+    
+    <h2>Directory Tests</h2>
+    <div class="debug-info" id="dir-tests">Testing...</div>
+    
+    <h2>Quick Links</h2>
+    <ul>
+        <li><a href="/">Root</a></li>
+        <li><a href="/season-programming/">Project Root</a></li>
+        <li><a href="/season-programming/archive/">Archive</a></li>
+        <li><a href="/season-programming/seasons/season1/">Season 1 Direct</a></li>
+        <li><a href="/season-programming/seasons/season2/">Season 2 Direct</a></li>
+    </ul>
+    
+    <script>
+        document.getElementById('timestamp').textContent = new Date().toISOString();
+        
+        // Display page info
+        const pageInfo = {
+            'URL': window.location.href,
+            'Path': window.location.pathname,
+            'Host': window.location.host,
+            'Protocol': window.location.protocol,
+            'User Agent': navigator.userAgent
+        };
+        
+        document.getElementById('page-info').innerHTML = 
+            Object.entries(pageInfo).map(([k,v]) => `<strong>${k}:</strong> ${v}`).join('<br>');
+        
+        // Load seasons data
+        fetch('./seasons-data.json')
+            .then(response => response.ok ? response.json() : Promise.reject('Failed to load seasons data'))
+            .then(data => {
+                document.getElementById('seasons-data').innerHTML = 
+                    `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            })
+            .catch(err => {
+                document.getElementById('seasons-data').innerHTML = 
+                    `<span style="color:red">Error: ${err}</span>`;
+            });
+            
+        // Check resource existence
+        const resourcesToCheck = [
+            './index.html',
+            './seasons/season1/index.html',
+            './seasons/season1/images/Poster.jpg',
+            './seasons/season2/index.html',
+            './seasons/season2/images/Poster.jpg',
+            './archive/index.html'
+        ];
+        
+        Promise.all(resourcesToCheck.map(url => 
+            fetch(url, {method: 'HEAD'})
+                .then(response => ({url, status: response.status, ok: response.ok}))
+                .catch(error => ({url, status: 'Error', ok: false, error: error.message}))
+        ))
+        .then(results => {
+            document.getElementById('dir-tests').innerHTML = 
+                results.map(r => `<div>${r.url}: <span style="color:${r.ok?'green':'red'}">${r.status}</span></div>`).join('');
+        });
+    </script>
+</body>
+</html>

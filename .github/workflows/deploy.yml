@@ -1,4 +1,4 @@
-name: Build and Deploy to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   workflow_dispatch:
@@ -17,7 +17,7 @@ permissions:
 # Allow only one concurrent deployment
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   check:
@@ -29,9 +29,9 @@ jobs:
           echo "You must type 'deploy' to confirm deployment"
           exit 1
 
-  build:
-    runs-on: ubuntu-latest
+  build-and-deploy:
     needs: check
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -39,66 +39,98 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
+      - name: Debug repository content
+        run: |
+          echo "=== Repository Structure ==="
+          ls -la
+          echo "=== Seasons Directory ==="
+          ls -la seasons/ || echo "Seasons directory not found"
+          echo "=== Available Season Folders ==="
+          ls -la seasons/*/ || echo "No season folders found"
+
       - name: Find latest season number
         id: find-latest
         run: |
-          latest=$(ls seasons | grep 'season' | sed 's/season//' | sort -n | tail -n 1)
+          if [ -d "seasons" ]; then
+            latest=$(ls seasons | grep 'season' | sed 's/season//' | sort -n | tail -n 1)
+            if [ -z "$latest" ]; then
+              echo "No seasons found in directory"
+              latest=1  # Default to 1 if no seasons are found
+            fi
+          else
+            echo "Seasons directory not found"
+            latest=1  # Default to 1 if seasons directory doesn't exist
+          fi
+          echo "Latest season: $latest"
           echo "latest_season=$latest" >> $GITHUB_OUTPUT
-          echo "Latest season is $latest"
-          
-      - name: Create GitHub Pages structure
+
+      - name: Display debug info
         run: |
-          # Create deployment directory
+          echo "Latest season number: ${{ steps.find-latest.outputs.latest_season }}"
+          echo "Current directory: $(pwd)"
+          echo "Index.html exists: $(test -f index.html && echo 'Yes' || echo 'No')"
+          echo "Seasons-data.json exists: $(test -f seasons-data.json && echo 'Yes' || echo 'No')"
+
+      - name: Build site structure
+        run: |
+          # Create clean deployment directory
           mkdir -p _site
           
-          # First, copy the root files that should be at the site root
-          cp index.html _site/
-          cp seasons-data.json _site/
-          
-          # Now, copy the latest season content to the root
-          # BUT don't overwrite index.html that we just copied
-          find seasons/season${{ steps.find-latest.outputs.latest_season }} -type f | grep -v "index.html" | xargs -I{} cp {} _site/
-          
-          # Create necessary directories and copy folders
-          mkdir -p _site/images
-          if [ -d "seasons/season${{ steps.find-latest.outputs.latest_season }}/images" ]; then
-            cp -r seasons/season${{ steps.find-latest.outputs.latest_season }}/images/* _site/images/
-          fi
-          
-          # Create archive directory
-          mkdir -p _site/archive
-          
-          # Copy archive HTML, CSS and JS
-          cp -r archive/* _site/archive/
-          
-          # Create seasons directory inside archive
-          mkdir -p _site/archive/seasons
-          
-          # Copy all seasons to archive/seasons
-          cp -r seasons/* _site/archive/seasons/
-          
-          # Copy seasons data JSON to archive
-          cp seasons-data.json _site/archive/
+          # STEP 1: Root files that should be preserved
+          echo "Copying root files..."
+          cp index.html _site/ || echo "Warning: index.html not found"
+          cp seasons-data.json _site/ || echo "Warning: seasons-data.json not found"
+          cp debug.html _site/ || echo "Warning: debug.html not found"
           
           # Create .nojekyll file to disable Jekyll processing
           touch _site/.nojekyll
           
-          # List the directory structure for debugging
-          echo "Site structure:"
-          find _site -type f | grep -v "/_" | sort
+          # STEP 2: Create archive structure
+          echo "Setting up archive..."
+          mkdir -p _site/archive
+          cp -r archive/* _site/archive/ || echo "Warning: archive directory not found or empty"
+          
+          # STEP 3: Copy seasons data to archive
+          cp seasons-data.json _site/archive/ || echo "Warning: couldn't copy seasons-data.json to archive"
+          
+          # STEP 4: Create seasons directory in archive
+          echo "Setting up seasons in archive..."
+          mkdir -p _site/archive/seasons
+          cp -r seasons/* _site/archive/seasons/ || echo "Warning: seasons directory not found or empty"
+          
+          # STEP 5: Copy latest season files to root (except index.html which we already copied)
+          echo "Copying latest season (season${{ steps.find-latest.outputs.latest_season }}) to root..."
+          
+          # Copy CSS file
+          if [ -f "seasons/season${{ steps.find-latest.outputs.latest_season }}/styles.css" ]; then
+            cp seasons/season${{ steps.find-latest.outputs.latest_season }}/styles.css _site/
+          else
+            echo "Warning: Latest season CSS not found"
+          fi
+          
+          # Create images directory
+          mkdir -p _site/images
+          
+          # Copy images from latest season to root images dir
+          if [ -d "seasons/season${{ steps.find-latest.outputs.latest_season }}/images" ]; then
+            cp -r seasons/season${{ steps.find-latest.outputs.latest_season }}/images/* _site/images/
+            echo "Copied season images to root"
+          else
+            echo "Warning: Latest season images directory not found"
+          fi
+          
+          # STEP 6: List what we've built
+          echo "=== Site Structure ==="
+          find _site -type f | sort
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
