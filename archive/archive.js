@@ -41,12 +41,14 @@ async function displaySeasons() {
             const card = document.createElement('div');
             card.className = 'season-card';
             
+            // Fix the issue with poster images
+            // Use a unique query parameter to prevent browser caching between different posters with the same filename
             card.innerHTML = `
                 <a href="seasons/season${season.number}/">
                     <div class="card-image">
-                        <img src="seasons/season${season.number}/images/Poster.jpg" 
+                        <img src="seasons/season${season.number}/images/Poster.jpg?v=${season.number}" 
                              alt="Season ${season.number} Poster" 
-                             onerror="this.onerror=null; this.src='placeholder.jpg'">
+                             onerror="this.onerror=null; this.src='../images/placeholder.jpg'">
                     </div>
                     <div class="card-content">
                         <div class="season-number">Season ${season.number}</div>
