@@ -3,104 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>schön.kino - living space cinema</title>
+    <title>schön.kino - Redirecting...</title>
+    <meta http-equiv="refresh" content="0;url=seasons/season2/" />
     <style>
         body {
             background-color: black;
             color: white;
-            font-family: 'Inter', 'Helvetica', sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            padding: 20px;
+            font-family: sans-serif;
             text-align: center;
+            padding: 20px;
         }
-        h1 {
-            font-size: 3rem;
+        a {
             color: #ff3030;
-            margin-bottom: 1rem;
-        }
-        p {
-            font-size: 1.2rem;
-            margin: 0.5rem 0;
-        }
-        .links {
-            margin-top: 2rem;
-        }
-        .button {
-            display: inline-block;
-            background-color: #ff3030;
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            margin: 10px;
-            font-weight: bold;
-            border-radius: 4px;
-        }
-        #error-message {
-            color: #ff3030;
-            margin: 1rem 0;
-            padding: 1rem;
-            background: rgba(255, 0, 0, 0.1);
-            border-radius: 4px;
-            max-width: 600px;
-            display: none;
         }
     </style>
 </head>
 <body>
-    <h1>schön.kino</h1>
-    <p>living space cinema</p>
-    
-    <div id="loading">Loading latest season...</div>
-    <div id="error-message"></div>
-    
-    <div class="links">
-        <a href="seasons/season1/" class="button">Season 1</a>
-        <a href="seasons/season2/" class="button">Season 2</a>
-        <a href="archive/" class="button">Archive</a>
-        <a href="debug.html" class="button" style="background-color: #333;">Debug</a>
-    </div>
-    
-    <script>
-        // Wait for DOM to be fully loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            const errorElem = document.getElementById('error-message');
-            const loadingElem = document.getElementById('loading');
-            
-            // Function to display error message
-            function showError(message) {
-                errorElem.style.display = 'block';
-                errorElem.textContent = message;
-                loadingElem.textContent = 'Could not redirect automatically';
-            }
-            
-            // Try to load seasons data and redirect
-            fetch('./seasons-data.json')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch seasons data (status: ${response.status})`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const seasons = data.seasons || [];
-                    if (seasons.length > 0) {
-                        const latestSeason = Math.max(...seasons.map(s => s.number));
-                        console.log('Latest season found:', latestSeason);
-                        window.location.href = `seasons/season${latestSeason}/`;
-                    } else {
-                        showError('No seasons found in data');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    showError(`Error loading season data: ${error.message}`);
-                });
-        });
-    </script>
+    If you are not redirected automatically, <a href="seasons/season2/">click here</a> to view the latest season.
 </body>
 </html>

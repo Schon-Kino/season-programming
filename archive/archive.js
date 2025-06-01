@@ -33,31 +33,24 @@ async function displaySeasons() {
         // Sort seasons in descending order (newest first)
         const sortedSeasons = [...seasons].sort((a, b) => b.number - a.number);
         
-        // Log what we're about to display
-        console.log('Displaying seasons:', sortedSeasons);
-        
         sortedSeasons.forEach(season => {
             const card = document.createElement('div');
             card.className = 'season-card';
             
-            // Generate a unique cache busting string
-            const uniqueId = Date.now() + '-' + Math.random().toString(36).substring(2, 9);
-            
-            // Log the image URL we're creating
-            const imagePath = `seasons/season${season.number}/images/Poster.jpg?v=${uniqueId}`;
-            console.log(`Season ${season.number} image path: ${imagePath}`);
+            // Use season-specific poster filename
+            const seasonNum = season.number;
             
             card.innerHTML = `
-                <a href="seasons/season${season.number}/">
+                <a href="../seasons/season${seasonNum}/">
                     <div class="card-image">
                         <img 
-                            src="${imagePath}" 
-                            alt="Season ${season.number} Poster" 
-                            onerror="this.onerror=null; console.error('Failed to load image for season ${season.number}'); this.src='../images/placeholder.jpg'"
+                            src="../seasons/season${seasonNum}/images/poster-season${seasonNum}.jpg" 
+                            alt="Season ${seasonNum} Poster" 
+                            onerror="this.onerror=null; this.src='../images/placeholder.jpg'"
                         >
                     </div>
                     <div class="card-content">
-                        <div class="season-number">Season ${season.number}</div>
+                        <div class="season-number">Season ${seasonNum}</div>
                         <div class="season-theme">${season.theme || ''}</div>
                     </div>
                 </a>

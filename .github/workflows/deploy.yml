@@ -76,55 +76,32 @@ jobs:
           # Create clean deployment directory
           mkdir -p _site
           
-          # STEP 1: Root files that should be preserved
-          echo "Copying root files..."
-          cp index.html _site/ || echo "Warning: index.html not found"
-          cp seasons-data.json _site/ || echo "Warning: seasons-data.json not found"
-          cp debug.html _site/ || echo "Warning: debug.html not found"
+          # STEP 1: Create the simple redirect at the root
+          echo "Creating root redirect..."
+          cat index.html > _site/index.html
+          
+          # Copy seasons-data.json to the root and archive
+          cp seasons-data.json _site/
+          
+          # Copy debug.html if it exists
+          cp debug.html _site/ 2>/dev/null || echo "No debug.html file"
           
           # Create .nojekyll file to disable Jekyll processing
           touch _site/.nojekyll
           
-          # STEP 2: Create archive structure
+          # STEP 2: Create archive structure - ONLY include the HTML/CSS/JS files, not the season content
           echo "Setting up archive..."
           mkdir -p _site/archive
-          cp -r archive/* _site/archive/ || echo "Warning: archive directory not found or empty"
+          # Only copy the HTML, CSS, JS files from archive, not seasons
+          find archive -maxdepth 1 -type f | grep -E "\.html$|\.css$|\.js$" | xargs -I{} cp {} _site/archive/
+          cp seasons-data.json _site/archive/
           
-          # STEP 3: Copy seasons data to archive
-          cp seasons-data.json _site/archive/ || echo "Warning: couldn't copy seasons-data.json to archive"
-          
-          # STEP 4: Create seasons directory in both the root and archive
-          echo "Setting up seasons in archive..."
-          mkdir -p _site/archive/seasons
-          cp -r seasons/* _site/archive/seasons/ || echo "Warning: seasons directory not found or empty"
-          
-          # STEP 4a: IMPORTANT - Also copy seasons to the root level
+          # STEP 3: Copy the seasons directory to the root level - this is the only copy we'll maintain
           echo "Setting up seasons at root level..."
           mkdir -p _site/seasons
-          cp -r seasons/* _site/seasons/ || echo "Warning: seasons directory not found or empty"
+          cp -r seasons/* _site/seasons/
           
-          # STEP 5: Copy latest season files to root (except index.html which we already copied)
-          echo "Copying latest season (season${{ steps.find-latest.outputs.latest_season }}) to root..."
-          
-          # Copy CSS file
-          if [ -f "seasons/season${{ steps.find-latest.outputs.latest_season }}/styles.css" ]; then
-            cp seasons/season${{ steps.find-latest.outputs.latest_season }}/styles.css _site/
-          else
-            echo "Warning: Latest season CSS not found"
-          fi
-          
-          # Create images directory
-          mkdir -p _site/images
-          
-          # Copy images from latest season to root images dir
-          if [ -d "seasons/season${{ steps.find-latest.outputs.latest_season }}/images" ]; then
-            cp -r seasons/season${{ steps.find-latest.outputs.latest_season }}/images/* _site/images/
-            echo "Copied season images to root"
-          else
-            echo "Warning: Latest season images directory not found"
-          fi
-          
-          # STEP 6: List what we've built
+          # STEP 4: List what we've built
           echo "=== Site Structure ==="
           find _site -type f | sort
 
