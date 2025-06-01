@@ -37,14 +37,15 @@ async function displaySeasons() {
             const card = document.createElement('div');
             card.className = 'season-card';
             
-            // Use season-specific poster filename
             const seasonNum = season.number;
+            // Use the new poster filename format with timestamp to prevent caching
+            const timestamp = Date.now();
             
             card.innerHTML = `
                 <a href="../seasons/season${seasonNum}/">
                     <div class="card-image">
                         <img 
-                            src="../seasons/season${seasonNum}/images/poster-season${seasonNum}.jpg" 
+                            src="../seasons/season${seasonNum}/images/poster-season${seasonNum}.jpg?t=${timestamp}" 
                             alt="Season ${seasonNum} Poster" 
                             onerror="this.onerror=null; this.src='../images/placeholder.jpg'"
                         >

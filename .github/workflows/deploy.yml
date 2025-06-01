@@ -76,32 +76,60 @@ jobs:
           # Create clean deployment directory
           mkdir -p _site
           
-          # STEP 1: Create the simple redirect at the root
-          echo "Creating root redirect..."
-          cat index.html > _site/index.html
-          
-          # Copy seasons-data.json to the root and archive
-          cp seasons-data.json _site/
-          
-          # Copy debug.html if it exists
-          cp debug.html _site/ 2>/dev/null || echo "No debug.html file"
+          # STEP 1: Root files that should be preserved
+          echo "Copying root files..."
+          cat index.html > _site/index.html || echo "Warning: index.html not found"
+          cat seasons-data.json > _site/seasons-data.json || echo "Warning: seasons-data.json not found"
+          cat debug.html > _site/debug.html || echo "Warning: debug.html not found"
           
           # Create .nojekyll file to disable Jekyll processing
           touch _site/.nojekyll
           
-          # STEP 2: Create archive structure - ONLY include the HTML/CSS/JS files, not the season content
+          # STEP 2: Create archive structure
           echo "Setting up archive..."
           mkdir -p _site/archive
-          # Only copy the HTML, CSS, JS files from archive, not seasons
-          find archive -maxdepth 1 -type f | grep -E "\.html$|\.css$|\.js$" | xargs -I{} cp {} _site/archive/
-          cp seasons-data.json _site/archive/
+          cp -r archive/* _site/archive/ || echo "Warning: archive directory not found or empty"
           
-          # STEP 3: Copy the seasons directory to the root level - this is the only copy we'll maintain
+          # STEP 3: Copy seasons data to archive
+          cp seasons-data.json _site/archive/ || echo "Warning: couldn't copy seasons-data.json to archive"
+          
+          # STEP 4: Create seasons directory in both the root and archive
           echo "Setting up seasons at root level..."
           mkdir -p _site/seasons
-          cp -r seasons/* _site/seasons/
+          cp -r seasons/* _site/seasons/ || echo "Warning: seasons directory not found or empty"
           
-          # STEP 4: List what we've built
+          # STEP 5: Check if image files were renamed and handle both cases
+          echo "Checking for renamed image files..."
+          
+          # For Season 1:
+          if [ -f "seasons/season1/images/poster-season1.jpg" ]; then
+            echo "Using new poster filename for season 1"
+          else
+            # If the renamed file doesn't exist but the old one does, create it
+            if [ -f "seasons/season1/images/Poster.jpg" ]; then
+              echo "Copying Poster.jpg to poster-season1.jpg for season 1"
+              cp "seasons/season1/images/Poster.jpg" "seasons/season1/images/poster-season1.jpg" 
+              cp "seasons/season1/images/Poster.jpg" "_site/seasons/season1/images/poster-season1.jpg"
+            else
+              echo "Warning: No poster found for season 1"
+            fi
+          fi
+          
+          # For Season 2:
+          if [ -f "seasons/season2/images/poster-season2.jpg" ]; then
+            echo "Using new poster filename for season 2"
+          else
+            # If the renamed file doesn't exist but the old one does, create it
+            if [ -f "seasons/season2/images/Poster.jpg" ]; then
+              echo "Copying Poster.jpg to poster-season2.jpg for season 2"
+              cp "seasons/season2/images/Poster.jpg" "seasons/season2/images/poster-season2.jpg"
+              cp "seasons/season2/images/Poster.jpg" "_site/seasons/season2/images/poster-season2.jpg"
+            else
+              echo "Warning: No poster found for season 2"
+            fi
+          fi
+          
+          # STEP 6: List what we've built
           echo "=== Site Structure ==="
           find _site -type f | sort
 

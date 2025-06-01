@@ -33,15 +33,9 @@
             padding: 5px;
             border-bottom: 1px solid #333;
         }
-        .success {
-            color: #4CAF50;
-        }
-        .error {
-            color: #F44336;
-        }
-        .warning {
-            color: #FF9800;
-        }
+        .success { color: #4CAF50; }
+        .error { color: #F44336; }
+        .warning { color: #FF9800; }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -59,7 +53,7 @@
     </style>
 </head>
 <body>
-    <h1>schön.kino - Enhanced Debug Page</h1>
+    <h1>schön.kino - Debug Page</h1>
     <p>Created: <span id="timestamp"></span></p>
     
     <h2>Page Information</h2>
@@ -77,24 +71,24 @@
                 <th>Preview</th>
             </tr>
             <tr>
-                <td>Season 1 Poster (archive)</td>
-                <td id="season1-image-status-archive"></td>
-                <td><img id="season1-image-archive" class="image-preview" alt="Season 1 Poster (archive)"></td>
+                <td>Season 1 Poster (new name)</td>
+                <td id="season1-image-status-new"></td>
+                <td><img id="season1-image-new" class="image-preview" alt="Season 1 Poster"></td>
             </tr>
             <tr>
-                <td>Season 1 Poster (direct)</td>
-                <td id="season1-image-status-direct"></td>
-                <td><img id="season1-image-direct" class="image-preview" alt="Season 1 Poster (direct)"></td>
+                <td>Season 2 Poster (new name)</td>
+                <td id="season2-image-status-new"></td>
+                <td><img id="season2-image-new" class="image-preview" alt="Season 2 Poster"></td>
             </tr>
             <tr>
-                <td>Season 2 Poster (archive)</td>
-                <td id="season2-image-status-archive"></td>
-                <td><img id="season2-image-archive" class="image-preview" alt="Season 2 Poster (archive)"></td>
+                <td>Season 1 Poster (old name)</td>
+                <td id="season1-image-status-old"></td>
+                <td><img id="season1-image-old" class="image-preview" alt="Season 1 Poster (old)"></td>
             </tr>
             <tr>
-                <td>Season 2 Poster (direct)</td>
-                <td id="season2-image-status-direct"></td>
-                <td><img id="season2-image-direct" class="image-preview" alt="Season 2 Poster (direct)"></td>
+                <td>Season 2 Poster (old name)</td>
+                <td id="season2-image-status-old"></td>
+                <td><img id="season2-image-old" class="image-preview" alt="Season 2 Poster (old)"></td>
             </tr>
         </table>
     </div>
@@ -128,12 +122,12 @@
         document.getElementById('page-info').innerHTML = 
             Object.entries(pageInfo).map(([k,v]) => `<strong>${k}:</strong> ${v}`).join('<br>');
         
-        // Function to generate a cache-busting parameter
+        // Cache buster to force reloads
         function cacheBuster() {
-            return 'nocache=' + Date.now() + Math.random().toString(36).substring(2, 8);
+            return 'nocache=' + Date.now();
         }
         
-        // Test image loading with cache busting
+        // Test image loading
         function testImage(src, statusId, imageId) {
             const img = document.getElementById(imageId);
             const statusElem = document.getElementById(statusId);
@@ -156,11 +150,11 @@
             };
         }
         
-        // Test various image paths
-        testImage('./archive/seasons/season1/images/Poster.jpg', 'season1-image-status-archive', 'season1-image-archive');
-        testImage('./seasons/season1/images/Poster.jpg', 'season1-image-status-direct', 'season1-image-direct');
-        testImage('./archive/seasons/season2/images/Poster.jpg', 'season2-image-status-archive', 'season2-image-archive');
-        testImage('./seasons/season2/images/Poster.jpg', 'season2-image-status-direct', 'season2-image-direct');
+        // Test both old and new image paths
+        testImage('./seasons/season1/images/poster-season1.jpg', 'season1-image-status-new', 'season1-image-new');
+        testImage('./seasons/season2/images/poster-season2.jpg', 'season2-image-status-new', 'season2-image-new');
+        testImage('./seasons/season1/images/Poster.jpg', 'season1-image-status-old', 'season1-image-old');
+        testImage('./seasons/season2/images/Poster.jpg', 'season2-image-status-old', 'season2-image-old');
         
         // Load seasons data
         fetch('./seasons-data.json')
@@ -168,31 +162,22 @@
             .then(data => {
                 document.getElementById('seasons-data').innerHTML = 
                     `<pre>${JSON.stringify(data, null, 2)}</pre>`;
-                    
-                // Check if season 2 is in the data
-                const seasonTwoExists = data.seasons && data.seasons.some(s => s.number === 2);
-                if (!seasonTwoExists) {
-                    document.getElementById('seasons-data').innerHTML += 
-                        `<div class="error">WARNING: Season 2 is not defined in seasons-data.json!</div>`;
-                }
             })
             .catch(err => {
                 document.getElementById('seasons-data').innerHTML = 
                     `<span class="error">Error: ${err}</span>`;
             });
             
-        // Check resource existence
+        // Check resources with new filenames
         const resourcesToCheck = [
             './index.html',
             './seasons-data.json',
             './seasons/season1/index.html',
-            './seasons/season1/images/Poster.jpg',
+            './seasons/season1/images/poster-season1.jpg',  // New filename
             './seasons/season2/index.html',
-            './seasons/season2/images/Poster.jpg',
+            './seasons/season2/images/poster-season2.jpg',  // New filename
             './archive/index.html',
-            './archive/seasons-data.json',
-            './archive/seasons/season1/index.html',
-            './archive/seasons/season2/index.html'
+            './archive/seasons-data.json'
         ];
         
         Promise.all(resourcesToCheck.map(url => 
