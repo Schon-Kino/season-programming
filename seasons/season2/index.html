@@ -37,8 +37,8 @@
         const basePath = window.location.pathname.includes('season-programming') ? 
                         '/season-programming' : '';
                         
-        // Set the base href dynamically
-        document.write(`<base href="${basePath}/">`);
+        // Don't set a base href - it's causing path resolution issues
+        // document.write(`<base href="${basePath}/seasons/season2/">`);
     </script>
 </head>
 <body>
@@ -55,8 +55,8 @@
     <div class="main-content">
         <div class="container">
             <div class="poster-container">
-                <!-- Renamed poster file for season 2 -->
-                <img src="./images/poster-season2.jpg" alt="schön.kino Season 2 Poster" class="poster-image">
+                <!-- Use absolute path to ensure correct resolution -->
+                <img src="/season-programming/seasons/season2/images/poster-season2.jpg" alt="schön.kino Season 2 Poster" class="poster-image">
             </div>
         </div>
     </div>
