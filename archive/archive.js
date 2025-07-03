@@ -38,15 +38,16 @@ async function displaySeasons() {
             card.className = 'season-card';
             
             const seasonNum = season.number;
+            // Use the new poster filename format with timestamp to prevent caching
             const timestamp = Date.now();
             
             card.innerHTML = `
                 <a href="../seasons/season${seasonNum}/">
                     <div class="card-image">
                         <img 
-                            src="../seasons/season${seasonNum}/images/poster-season${seasonNum}.png?t=${timestamp}" 
+                            src="../seasons/season${seasonNum}/images/poster-season${seasonNum}.jpg?t=${timestamp}" 
                             alt="Season ${seasonNum} Poster" 
-                            onerror="this.onerror=null; this.src='../seasons/season${seasonNum}/images/poster-season${seasonNum}.jpg?t=${timestamp}'; this.onerror=function(){this.src='../images/placeholder.jpg';}"
+                            onerror="this.onerror=null; this.src='../images/placeholder.jpg'"
                         >
                     </div>
                     <div class="card-content">
@@ -68,5 +69,4 @@ async function displaySeasons() {
         document.getElementById('seasons-grid').innerHTML = 
             `<div class="error">Error loading seasons: ${error.message}</div>`;
     }
-}
 }
