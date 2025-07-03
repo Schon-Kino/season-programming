@@ -9,6 +9,11 @@
       "number": 2,
       "theme": "FLIRTING",
       "description": "This season of movie-seeing brings a collectively curated series of films about flirting."
+    },
+    {
+      "number": 3,
+      "theme": "DIVING",
+      "description": ""
     }
   ]
 }
