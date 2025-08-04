@@ -148,7 +148,7 @@ html, body {
   
   /* VERTICAL POSITIONING: Position based on viewport height */
   /* This positions umbrella so rod bottom is on sand, top in water */
-  top: 45vh; /* Adjust this value to move umbrella up/down */
+  top: 43vh; /* Moved up slightly (was 45vh) */
   
   /* LAYER STACKING: Controls what appears above/below umbrella */
   z-index: 20; /* Well above waves (10) to ensure umbrella is visible */
@@ -160,7 +160,7 @@ html, body {
 
 /* SVG UMBRELLA: Vector umbrella with transparent holes */
 .umbrella-svg {
-  width: 280px;      /* Match original umbrella width */
+  width: 266px;      /* 5% smaller (280px * 0.95) */
   height: auto;      /* Maintain aspect ratio */
   display: block;
   pointer-events: none; /* Allows interaction with content behind */
@@ -365,7 +365,7 @@ footer {
    ─────────────────────────────────────────────────────── */
 @media(max-width: 768px) {
   #site-title h1 {
-    font-size: 5.7rem; /* 5% smaller (was 6rem) */
+    font-size: 5.4rem; /* Smaller again (was 5.7rem) */
   }
   
   .container {
@@ -394,13 +394,13 @@ footer {
 
   /* Make umbrella smaller on mobile */
   .umbrella-svg {
-    width: 252px; /* 10% smaller (280px * 0.9) */
+    width: 239px; /* 15% smaller than original (280px * 0.85) */
   }
 }
 
 @media(max-width: 480px) {
   #site-title h1 {
-    font-size: 4.275rem; /* 5% smaller (was 4.5rem) */
+    font-size: 4rem; /* Smaller again (was 4.275rem) */
   }
   
   footer {
@@ -418,7 +418,7 @@ footer {
 
   /* Make umbrella even smaller on very small screens */
   .umbrella-svg {
-    width: 224px; /* 20% smaller than original for very small screens */
+    width: 210px; /* 25% smaller than original for very small screens */
   }
 }
     flex-direction: column;
