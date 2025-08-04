@@ -108,9 +108,12 @@ breatheShoreline();
 
 /* fade the site title once the sand band scrolls into view */
 const title = document.getElementById('site-title');
-const sandTop = document.getElementById('sand').offsetTop;
-window.addEventListener('scroll', () => {
-  const trigger = sandTop - 60; // 60px buffer
-  if (window.scrollY >= trigger) { title.classList.add('hide'); }
-  else { title.classList.remove('hide'); }
-});
+const sand = document.getElementById('sand');
+if (sand) {
+  const sandTop = sand.offsetTop;
+  window.addEventListener('scroll', () => {
+    const trigger = sandTop - 60; // 60px buffer
+    if (window.scrollY >= trigger) { title.classList.add('hide'); }
+    else { title.classList.remove('hide'); }
+  });
+}
