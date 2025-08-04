@@ -15,8 +15,13 @@ const LAYERS = [
 
 /* -------- CANVAS BOILERPLATE -------- */
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM loaded, looking for canvas...');
   const canvas = document.getElementById('wavesCanvas');
-  if (!canvas) return; // Safety check
+  if (!canvas) {
+    console.error('Canvas not found!');
+    return;
+  }
+  console.log('Canvas found:', canvas);
   
   const ctx = canvas.getContext('2d', { alpha:true });
   let width, height, dpr;
@@ -26,7 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Get the actual size of the ocean section
     const oceanSection = document.getElementById('ocean');
+    if (!oceanSection) {
+      console.error('Ocean section not found!');
+      return;
+    }
     const oceanHeight = oceanSection.offsetHeight;
+    console.log('Ocean height:', oceanHeight);
     
     // Set canvas dimensions including extra for sky overlap
     canvas.style.height = `${oceanHeight + (0.1 * window.innerHeight)}px`;
@@ -35,6 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     height = canvas.clientHeight * dpr;
     canvas.width = width;
     canvas.height = height;
+    console.log('Canvas resized to:', width, 'x', height);
   }
   
   window.addEventListener('resize', resize);
@@ -78,6 +89,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     requestAnimationFrame(animate);
   }
+  
+  console.log('Starting wave animation...');
   requestAnimationFrame(animate);
 });
 
@@ -107,13 +120,26 @@ function breatheShoreline() {
 breatheShoreline();
 
 /* fade the site title once the sand band scrolls into view */
-const title = document.getElementById('site-title');
-const sand = document.getElementById('sand');
-if (sand) {
-  const sandTop = sand.offsetTop;
-  window.addEventListener('scroll', () => {
-    const trigger = sandTop - 60; // 60px buffer
-    if (window.scrollY >= trigger) { title.classList.add('hide'); }
-    else { title.classList.remove('hide'); }
-  });
-}
+window.addEventListener('load', () => {
+  const title = document.getElementById('site-title');
+  const sand = document.getElementById('sand');
+  
+  console.log('Title element:', title);
+  console.log('Sand element:', sand);
+  
+  if (sand && title) {
+    const sandTop = sand.offsetTop;
+    console.log('Sand top position:', sandTop);
+    
+    window.addEventListener('scroll', () => {
+      const trigger = sandTop - 60; // 60px buffer
+      if (window.scrollY >= trigger) { 
+        title.classList.add('hide'); 
+      } else { 
+        title.classList.remove('hide'); 
+      }
+    });
+  } else {
+    console.error('Missing elements for scroll animation');
+  }
+});

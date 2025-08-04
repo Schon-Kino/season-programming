@@ -31,15 +31,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
-    
-    <script>
-        // Determine if we're in a GitHub Pages subpath deployment
-        const basePath = window.location.pathname.includes('season-programming') ? 
-                        '/season-programming' : '';
-                        
-        // Set the base href dynamically
-        document.write(`<base href="${basePath}/">`);
-    </script>
 </head>
 
 <body>
@@ -72,7 +63,7 @@
 
   <!-- Beach umbrella - SVG version with transparent holes -->
   <div class="beach-umbrella">
-    <object data="images/umbrella.svg" type="image/svg+xml" class="umbrella-svg"></object>
+    <object data="./images/umbrella.svg" type="image/svg+xml" class="umbrella-svg"></object>
   </div>
 
   <!-- sand band with programme -->
@@ -96,7 +87,7 @@
           <!-- Program heading with archive button -->
           <div class="program-header">
             <h2 class="program-heading-top">Program</h2>
-            <a href="/season-programming/archive/" class="archive-button">Season Archive</a>
+            <a href="../../archive/" class="archive-button">Season Archive</a>
           </div>
 
           <div class="schedule">
@@ -131,6 +122,15 @@
                 <span class="director-info">Éric Rohmer (1996, 1h53m)</span>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </section>
+
+  <script src="./script.js"></script>
+</body>
+</html>
           </div>
         </div>
       </div>
