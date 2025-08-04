@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="280" height="419" viewBox="0 0 280 419" 
+     xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Define a mask for the umbrella holes -->
+    <mask id="umbrella-mask">
+      <!-- White background (visible) -->
+      <rect width="280" height="419" fill="white"/>
+      <!-- Black circles (transparent holes) -->
+      <circle cx="28" cy="140" r="28" fill="black"/>
+      <circle cx="84" cy="140" r="28" fill="black"/>
+      <circle cx="140" cy="140" r="28" fill="black"/>
+      <circle cx="196" cy="140" r="28" fill="black"/>
+      <circle cx="252" cy="140" r="28" fill="black"/>
+    </mask>
+  </defs>
+  
+  <!-- Umbrella pole -->
+  <rect x="132.5" y="114" width="15" height="305" 
+        fill="#FFFEFE"/>
+  
+  <!-- Umbrella canopy (semicircle with holes) -->
+  <path d="M 0.0 140 
+           A 140 140 0 0 1 280.0 140 
+           Z" 
+        fill="#FF3030" 
+        mask="url(#umbrella-mask)"/>
+</svg>

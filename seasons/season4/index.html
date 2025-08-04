@@ -26,7 +26,7 @@
     <link rel="apple-touch-icon" sizes="180x180" href="images/apple-touch-icon.png">
     <link rel="icon" href="images/favicon.ico">
     
-    <title>schön.kino</title>
+    <title>schön.kino — summer 2025</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,89 +41,102 @@
         document.write(`<base href="${basePath}/">`);
     </script>
 </head>
+
 <body>
-    <div class="header-container">
-        <div class="text-overlay">
-            <h1>schön.</h1>
-            <h1>kino</h1>
-        </div>
-        <div class="nav-container">
-            <a href="/season-programming/archive/" class="archive-button">Season Archive</a>
-        </div>
+
+  <!-- festival title -->
+  <div id="site-title">
+    <h1>schön.</h1>
+    <h1>kino</h1>
+  </div>
+
+  <!-- sky band with sun -->
+  <section class="sky">
+    <div class="sun">
+      <div class="sun-center"></div>
+      <div class="sun-ray ray1"></div>
+      <div class="sun-ray ray2"></div>
+      <div class="sun-ray ray3"></div>
+      <div class="sun-ray ray4"></div>
+      <div class="sun-ray ray5"></div>
+      <div class="sun-ray ray6"></div>
+      <div class="sun-ray ray7"></div>
+      <div class="sun-ray ray8"></div>
     </div>
-    
-    <div class="main-content">
-        <div class="container">
-            <div class="poster-container">
-                <img src="images/Poster.jpg" alt="schön.kino Season 4 Poster" class="poster-image">
-            </div>
-        </div>
-    </div>
-    
+  </section>
+
+  <!-- ocean band with canvas-based waves -->
+  <section id="ocean" class="ocean">
+    <canvas id="wavesCanvas"></canvas>
+  </section>
+
+  <!-- Beach umbrella - SVG version with transparent holes -->
+  <div class="beach-umbrella">
+    <object data="images/umbrella.svg" type="image/svg+xml" class="umbrella-svg"></object>
+  </div>
+
+  <!-- sand band with programme -->
+  <section class="sand" id="sand">
     <footer>
-        <div class="about-section">
-            <div class="festival-info">
-                <h2>schönbrunner straße 120</h2>
-                <h3>19h30 wednesdays</h3>
+      <div class="about-section">
+        <!-- Left column -->
+        <div class="festival-info">
+          <h2>schönbrunner straße 120</h2>
+          <h3>19h30 · wednesdays</h3>
+          
+          <!-- Season info moved below in the left column -->
+          <div class="season-info">
+            <p class="season-heading">Season 4: SWIMMING</p>
+            <p>This season of movie‑seeing brings together works that explore the act of swimming — diving into waters, coastal adventures, and the rhythms of summer by the sea.</p>
+          </div>
+        </div>
+
+        <!-- Right column -->
+        <div class="program-column">
+          <!-- Program heading with archive button -->
+          <div class="program-header">
+            <h2 class="program-heading-top">Program</h2>
+            <a href="/season-programming/archive/" class="archive-button">Season Archive</a>
+          </div>
+
+          <div class="schedule">
+            <div class="schedule-item">
+              <div class="movie-date">Aug 6</div>
+              <div class="movie-info">
+                <strong>Les Vacances de Monsieur Hulot</strong>
+                <span class="director-info">Jacques Tati (1953, 1h54m)</span>
+              </div>
             </div>
-            
-            <div class="about-text">
-                <p class="welcome">Living space cinema.</p>
-                <p class="season-heading">Season 4: SWIMMING</p>
-                <p>This season of movie-seeing brings a collectively curated series of films. The stories speak about [THEME DESCRIPTION].</p>
-                
-                <p class="program-heading">Program</p>
-                
-                <div class="schedule">
-                    <div class="schedule-item">
-                      <div class="movie-date">[DATE 1]</div>
-                      <div class="movie-info">
-                        <strong>[MOVIE TITLE 1]</strong><br>
-                        <span class="director-info">[DIRECTOR 1] ([YEAR 1], [DURATION 1])</span>
-                      </div>
-                    </div>
-                  
-                    <div class="schedule-item">
-                      <div class="movie-date">[DATE 2]</div>
-                      <div class="movie-info">
-                        <strong>[MOVIE TITLE 2]</strong><br>
-                        <span class="director-info">[DIRECTOR 2] ([YEAR 2], [DURATION 2])</span>
-                      </div>
-                    </div>
-                  
-                    <div class="schedule-item">
-                      <div class="movie-date">[DATE 3]</div>
-                      <div class="movie-info">
-                        <strong>Snacks: a selection of shorts</strong><br>
-                    
-                        <div class="short-film">
-                          <span class="short-title">[SHORT 1]</span><br>
-                          <span class="short-director">[SHORT DIRECTOR 1] ([SHORT COUNTRY 1] [SHORT YEAR 1], [SHORT DURATION 1])</span>
-                        </div>
-                    
-                        <div class="short-film">
-                          <span class="short-title">[SHORT 2]</span><br>
-                          <span class="short-director">[SHORT DIRECTOR 2] ([SHORT COUNTRY 2] [SHORT YEAR 2], [SHORT DURATION 2])</span>
-                        </div>
-                    
-                        <div class="short-film">
-                          <span class="short-title">[SHORT 3]</span><br>
-                          <span class="short-director">[SHORT DIRECTOR 3] ([SHORT COUNTRY 3] [SHORT YEAR 3], [SHORT DURATION 3])</span>
-                        </div>
-                      </div>
-                    </div>
-                  
-                    <div class="schedule-item">
-                      <div class="movie-date">[DATE 4]</div>
-                      <div class="movie-info">
-                        <strong>[MOVIE TITLE 3]</strong><br>
-                        <span class="director-info">[DIRECTOR 3] ([YEAR 3], [DURATION 3])</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+
+            <div class="schedule-item">
+              <div class="movie-date">Aug 13</div>
+              <div class="movie-info">
+                <strong>L'ombrellone</strong>
+                <span class="director-info">Dino Risi (1965, 1h43m)</span>
+              </div>
             </div>
-        </div>         
+
+            <div class="schedule-item">
+              <div class="movie-date">Aug 20</div>
+              <div class="movie-info">
+                <strong>du côté de la côte</strong>
+                <span class="director-info">Agnès Varda (FR 1958, 32m)</span>
+              </div>
+            </div>
+
+            <div class="schedule-item">
+              <div class="movie-date">Aug 27</div>
+              <div class="movie-info">
+                <strong>A Summer's Tale</strong>
+                <span class="director-info">Éric Rohmer (1996, 1h53m)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </footer>
+  </section>
+
+  <script src="script.js"></script>
 </body>
 </html>

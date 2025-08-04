@@ -1,252 +1,446 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-body {
-    background-color: #000;
-    font-family: 'Inter', sans-serif;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    color: white;
+html, body {
+  overflow-x: hidden;
+  font-family: 'Inter', sans-serif;
+  background: #fff;
 }
 
-.main-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 0 2rem 2rem;
-    background-color: #000;
-    position: relative;
+:root {
+  --sky: #B3E4FF;
+  --ocean-dark: #005B99;  /* Darkest, foreground wave */
+  --ocean-mid: #1E7FCB;   /* Middle wave */
+  --ocean-light: #4AA4DE; /* Lightest, background wave */
+  --sand: #F8D98A;
+  --accent: #FF3030;
+  --sun: #FFBB22;
 }
 
-.header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 2rem 2rem 0;
-    width: 100%;
+/* ───────────────────────────────────────────────────────
+   TITLE (fixed, fades before sand)
+   ─────────────────────────────────────────────────────── */
+#site-title {
+  position: fixed;
+  top: 2rem;
+  left: 2rem;
+  z-index: 50;
+  line-height: .9;
+  transition: opacity .4s ease;
 }
 
-.text-overlay {
-    margin-bottom: 2rem;
-    text-align: left;
-    flex: 1;
+#site-title.hide {
+  opacity: 0;
 }
 
-h1 {
-    font-size: 7.5vw;
-    line-height: 0.9;
-    font-weight: 700;
-    text-transform: lowercase;
-    color: #ff3030;
-    margin: 0;
-    padding: 0;
-    letter-spacing: -0.02em;
-    transform-origin: left;
-    transform: scaleY(1.05);
+#site-title h1 {
+  font-size: 8rem; /* Fixed size instead of responsive clamp */
+  font-weight: 700;
+  text-transform: lowercase;
+  letter-spacing: -.02em;
+  transform-origin: left;
+  transform: scaleY(1.05);
+  color: var(--accent);
 }
 
+/* ───────────────────────────────────────────────────────
+   BANDS OF COLOUR - Taller sky, canvas waves
+   ─────────────────────────────────────────────────────── */
+.sky {
+  height: 50vh; /* Taller sky */
+  background: var(--sky);
+  position: relative;
+  overflow: hidden;
+}
+
+#ocean {
+  height: 30vh; /* Ocean height */
+  background: var(--ocean-light); /* Fallback background */
+  position: relative;
+  /* Removed overflow:hidden to allow canvas to extend into sky */
+}
+
+.sand {
+  padding-top: 4rem;
+  background: var(--sand);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ───────────────────────────────────────────────────────
+   SUN - Matisse-style with rotation
+   ─────────────────────────────────────────────────────── */
+.sun {
+  position: absolute;
+  top: 3rem;
+  right: 3rem;
+  width: 140px; /* Bigger sun (was 100px) */
+  height: 140px; /* Bigger sun (was 100px) */
+  animation: rotate 60s linear infinite;
+}
+
+.sun-center {
+  position: absolute;
+  top: 35px; /* Adjusted for larger sun */
+  left: 35px; /* Adjusted for larger sun */
+  width: 70px; /* Bigger center (was 50px) */
+  height: 70px; /* Bigger center (was 50px) */
+  background: var(--sun);
+  border-radius: 50%;
+}
+
+.sun-ray {
+  position: absolute;
+  top: 65px; /* Adjusted for larger sun */
+  left: 0;
+  width: 140px; /* Longer rays (was 100px) */
+  height: 14px; /* Thicker rays (was 10px) */
+  background: var(--sun);
+  transform-origin: center;
+}
+
+.ray1 { transform: rotate(0deg); }
+.ray2 { transform: rotate(45deg); }
+.ray3 { transform: rotate(90deg); }
+.ray4 { transform: rotate(135deg); }
+.ray5 { transform: rotate(180deg); }
+.ray6 { transform: rotate(225deg); }
+.ray7 { transform: rotate(270deg); }
+.ray8 { transform: rotate(315deg); }
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Shoreline specific styling - keep only this wave */
+.wave.shoreline {
+  position: absolute;
+  left: 0;
+  width: 200%;
+  height: 120px;
+  top: -60px;
+  transform: scaleY(-1) translateY(60px);
+  z-index: 4;
+}
+
+.wave.shoreline path {
+  fill: var(--sand);
+  stroke: rgba(255, 255, 255, 0.7);
+  stroke-width: 2px;
+}
+
+/* ───────────────────────────────────────────────────────
+   BEACH UMBRELLA - SVG with Transparent Holes
+   ─────────────────────────────────────────────────────── */
+
+/* Main umbrella container - POSITIONING CONTROLS */
+.beach-umbrella {
+  position: absolute; /* Absolute positioning - stays with page content, doesn't follow scroll */
+  
+  /* HORIZONTAL POSITIONING: Adjust 'right' value to move left/right */
+  /* 15% = umbrella positioned 15% from right edge of viewport */
+  right: 15%;
+  
+  /* VERTICAL POSITIONING: Position based on viewport height */
+  /* This positions umbrella so rod bottom is on sand, top in water */
+  top: 45vh; /* Adjust this value to move umbrella up/down */
+  
+  /* LAYER STACKING: Controls what appears above/below umbrella */
+  z-index: 20; /* Well above waves (10) to ensure umbrella is visible */
+  
+  /* TILT ANGLE: Adjust rotation to change umbrella lean */
+  /* Negative = leans left, positive = leans right */
+  transform: rotate(20deg);
+}
+
+/* SVG UMBRELLA: Vector umbrella with transparent holes */
+.umbrella-svg {
+  width: 280px;      /* Match original umbrella width */
+  height: auto;      /* Maintain aspect ratio */
+  display: block;
+  pointer-events: none; /* Allows interaction with content behind */
+}
+
+/* ───────────────────────────────────────────────────────
+   CANVAS WAVES
+   ─────────────────────────────────────────────────────── */
+#wavesCanvas {
+  position: absolute;
+  left: 0;
+  top: -10vh; /* Raise 10vh so horizon wave touches the sky */
+  width: 100%;
+  height: calc(100% + 10vh); /* Grows to keep full ocean covered */
+  display: block;
+  pointer-events: none;
+  z-index: 10; /* Ensure canvas is on top of all content */
+}
+
+/* ───────────────────────────────────────────────────────
+   CONTAINER (room for CSS/JS poster)
+   ─────────────────────────────────────────────────────── */
 .container {
-    width: 80vmin;
-    height: auto;
-    max-width: 90vw;
-    margin: 0 auto;
+  width: 80vmin;
+  max-width: 90vw;
+  margin: 0 auto;
+  padding-bottom: 3rem;
 }
 
-.poster-container {
-    width: 100%;
-    height: auto;
-}
-
-.poster-image {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-    display: block;
-}
-
+/* ───────────────────────────────────────────────────────
+   PROGRAMME — ENHANCED MATISSE-STYLE DESIGN
+   ─────────────────────────────────────────────────────── */
 footer {
-    background-color: #000;
-    color: white;
-    padding: 4rem 2rem;
-    width: 100%;
-}
-
-.program-heading {
-    font-weight: 700;
-    font-size: 1.5rem;
-    margin: 2rem 0 1rem 0;
-    color: #ff3030;
+  padding: 5rem 2rem;
+  color: #000;
+  background-color: var(--sand);
+  position: relative;
 }
 
 .about-section {
-    max-width: 800px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 3rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 4rem;
+}
+
+/* Festival info styling */
+.festival-info {
+  position: relative;
+}
+
+/* Space between venue info and season info */
+.season-info {
+  margin-top: 4rem;
+}
+
+/* Restore distinct styling for season heading */
+.season-heading {
+  font-weight: 700;
+  font-size: 1.8rem;
+  margin-bottom: 0.7rem;
+  color: #333;
+  letter-spacing: 0.02em;
+  display: block; /* Ensure it's treated as a block element */
+}
+
+/* Style for the season description paragraph */
+.season-info p:not(.season-heading) {
+  font-size: 1.15rem;
+  line-height: 1.6;
+  font-weight: normal;
+  color: #000;
+  margin-bottom: 1.2rem;
 }
 
 h2 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-    color: #ff3030;
+  font-size: 2.2rem;
+  margin-bottom: 0.7rem;
+  color: var(--accent);
+  font-weight: 700;
+  line-height: 1.1;
 }
 
 h3 {
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-    color: #fff;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+  color: #333;
 }
 
-p {
-    margin-bottom: 1rem;
-    line-height: 1.6;
-    font-size: 1.1rem;
+/* Program header with archive button */
+.program-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
 }
 
-.welcome {
-    font-size: 1.5rem;
-    font-style: italic;
-    margin-bottom: 1.5rem;
-    color: #ff3030;
+/* Program heading at the top of the right column */
+.program-heading-top {
+  font-weight: 700;
+  font-size: 2.2rem; /* Match size with venue address */
+  margin-bottom: 0;
+  color: var(--accent);
+  letter-spacing: 0.02em;
 }
 
-.season-heading {
-    font-weight: 700;
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-    color: white;
-    text-decoration: underline;
-}
-
-.schedule {
-    padding-left: 1rem;
-    position: relative;
-    margin: 2rem 0;
-}
-
-.schedule::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 3px;
-    height: calc(100% - 4rem); /* Subtracting bottom margin of last movie info */
-    background-color: #ff3030;
-}
-
-.schedule-item {
-    display: grid;
-    grid-template-columns: 100px 1fr;
-    align-items: start;
-    color: #fff;
-}
-
-.movie-date {
-    text-align: left;
-    padding-right: 1rem;
-    font-weight: 600;
-    color: #fff;
-    line-height: 1.6;
-}
-
-.movie-info {
-    padding-left: 1rem;
-    line-height: 1.6;
-    margin-bottom: 4rem;
-    color: #fff;
-}
-
-.director-info {
-    font-size: 0.95em;
-    font-weight: 400;
-    opacity: 0.9;
-    display: block;
-    line-height: 1;
-    word-break: break-word;
-}
-
-.short-film {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-}
-
-.short-title {
-    font-weight: 600;
-    color: white;
-    margin-bottom: 0.2rem;
-}
-
-.short-director {
-    display: block;
-    font-weight: 400;
-    line-height: 1;
-    opacity: 0.9;
-    color: white;
-}
-
-.nav-container {
-    position: static;
-    text-align: right;
-    padding: 0;
-    z-index: 100;
-}
-
+/* Archive button styling */
 .archive-button {
-    background-color: #ff3030;
-    color: white;
-    border: none;
-    padding: 0.5rem 1.5rem;
-    font-weight: 600;
-    font-size: 1rem;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-    display: inline-block;
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 4px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+  display: inline-block;
+  white-space: nowrap;
 }
 
 .archive-button:hover {
-    background-color: #e52020;
+  background-color: #e52020;
 }
 
-@media (max-width: 768px) {
-    h1 {
-        font-size: 16vw;
-    }
-    
-    .container {
-        width: 90vw;
-    }
-
-    .about-section {
-        grid-template-columns: 1fr;
-    }
-
-    .nav-container {
-        padding: 0.5rem 1rem;
-    }
+/* Schedule now starts closer to the heading */
+.schedule {
+  padding-left: 1.5rem;
+  position: relative;
+  margin: 0; /* No top margin since program-header handles spacing */
 }
 
-@media (max-width: 480px) {
-    .main-content {
-        padding: 1rem;
-    }
+/* Timeline - all red since it's a future program */
+.schedule::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: calc(100% - 4rem);
+  background: var(--accent); /* All red for future program */
+  border-radius: 2px;
+}
 
-    .container {
-        width: 95vw;
-    }
-    
-    .nav-container {
-        padding: 0.5rem 1rem;
-    }
-    
-    .archive-button {
-        padding: 0.4rem 1rem;
-        font-size: 0.9rem;
-    }
+.schedule-item {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  align-items: start;
+  position: relative;
+}
+
+/* Removed circles completely */
+
+.movie-date {
+  font-weight: 600;
+  line-height: 1.6;
+  color: #000;
+  font-size: 1.1rem;
+}
+
+.movie-info {
+  padding-left: 1.5rem;
+  line-height: 1.6;
+  margin-bottom: 4rem;
+  color: #000;
+}
+
+.movie-info strong {
+  font-size: 1.25rem;
+  line-height: 1.4;
+  display: inline-block;
+  margin-bottom: 0.3rem;
+}
+
+.director-info {
+  font-size: 1rem;
+  opacity: .85;
+  display: block;
+  line-height: 1.4;
+  font-style: italic;
+}
+
+.short-film {
+  margin: 1.2rem 0;
+  position: relative;
+  padding-left: 1rem;
+}
+
+/* Add small markers for short films */
+.short-film::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.short-title {
+  font-weight: 600;
+  color: #000;
+}
+
+.short-director {
+  display: block;
+  font-weight: 400;
+  opacity: .85;
+  line-height: 1.3;
+  color: #333;
+  font-style: italic;
+  font-size: 0.95rem;
+}
+
+.alert {
+  color: var(--accent);
+  font-size: .95rem;
+  font-weight: 500;
+  margin-top: 0.5rem;
+  display: inline-block;
+  padding: 3px 8px;
+  background-color: rgba(255, 48, 48, 0.1);
+  border-radius: 4px;
+}
+
+/* Style past events differently */
+.past .movie-date,
+.past .movie-info {
+  opacity: .5;
+  transition: opacity .3s ease;
+}
+
+/* ───────────────────────────────────────────────────────
+   MEDIA QUERIES
+   ─────────────────────────────────────────────────────── */
+@media(max-width: 768px) {
+  #site-title h1 {
+    font-size: 6rem; /* Slightly smaller on mobile but still large */
+  }
+  
+  .container {
+    width: 90vw;
+  }
+  
+  .about-section {
+    grid-template-columns: 1fr;
+  }
+
+  /* Ensure proper spacing on mobile */
+  .season-info {
+    margin-top: 2rem;
+  }
+  
+  .program-column {
+    margin-top: 2rem;
+  }
+
+  /* Stack program header on mobile */
+  .program-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+}
+
+@media(max-width: 480px) {
+  #site-title h1 {
+    font-size: 4.5rem; /* Adjusted for very small screens */
+  }
+  
+  footer {
+    padding: 3rem 1rem;
+  }
+  
+  .container {
+    width: 95vw;
+  }
+
+  .archive-button {
+    padding: 0.4rem 1rem;
+    font-size: 0.8rem;
+  }
 }
