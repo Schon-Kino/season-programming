@@ -218,40 +218,6 @@ footer {
   margin-top: 4rem;
 }
 
-/* Restore distinct styling for season heading */
-.season-heading {
-  font-weight: 700;
-  font-size: 1.8rem;
-  margin-bottom: 0.7rem;
-  color: #333;
-  letter-spacing: 0.02em;
-  display: block; /* Ensure it's treated as a block element */
-}
-
-/* Style for the season description paragraph */
-.season-info p:not(.season-heading) {
-  font-size: 1.15rem;
-  line-height: 1.6;
-  font-weight: normal;
-  color: #000;
-  margin-bottom: 1.2rem;
-}
-
-h2 {
-  font-size: 2.2rem;
-  margin-bottom: 0.7rem;
-  color: var(--accent);
-  font-weight: 700;
-  line-height: 1.1;
-}
-
-h3 {
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  font-weight: 400;
-  color: #333;
-}
-
 /* Program header with archive button */
 .program-header {
   display: flex;
@@ -399,7 +365,7 @@ h3 {
    ─────────────────────────────────────────────────────── */
 @media(max-width: 768px) {
   #site-title h1 {
-    font-size: 6rem; /* Slightly smaller on mobile but still large */
+    font-size: 5.7rem; /* 5% smaller (was 6rem) */
   }
   
   .container {
@@ -416,11 +382,45 @@ h3 {
   }
   
   .program-column {
-    margin-top: 2rem;
+    margin-top: 0rem; /* Removed spacing between season info and program */
   }
 
   /* Stack program header on mobile */
   .program-header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  /* Make umbrella smaller on mobile */
+  .umbrella-svg {
+    width: 252px; /* 10% smaller (280px * 0.9) */
+  }
+}
+
+@media(max-width: 480px) {
+  #site-title h1 {
+    font-size: 4.275rem; /* 5% smaller (was 4.5rem) */
+  }
+  
+  footer {
+    padding: 3rem 1rem;
+  }
+  
+  .container {
+    width: 95vw;
+  }
+
+  .archive-button {
+    padding: 0.4rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  /* Make umbrella even smaller on very small screens */
+  .umbrella-svg {
+    width: 224px; /* 20% smaller than original for very small screens */
+  }
+}
     flex-direction: column;
     gap: 1rem;
     align-items: flex-start;
